@@ -7,6 +7,7 @@
     "dev": "webpack-dev-server --config webpack/config.dev.js --open",
     "build": "webpack --config webpack/config.prod.js",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "start": "npx serve dist -s -l 4000",
     "kill": "kill -9 $(lsof -ti:8080)"
   },
   "dependencies": {
@@ -26,6 +27,7 @@
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.6.0",
     "raw-loader": "^4.0.2",
+    "serve": "^14.2.1",
     "terser-webpack-plugin": "^5.3.10",
     "ts-loader": "^9.5.1",
     "typescript": "^5.3.3",
