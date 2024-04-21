@@ -1,3 +1,4 @@
+import * as Phaser from 'phaser';
 import { BootScene } from './scenes/BootScene';
 import { Game, Types } from 'phaser';
 import { HomeScene } from './scenes/HomeScene';
@@ -12,6 +13,12 @@ const config: Types.Core.GameConfig = {
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
+  },
+  physics: {
+    default: 'arcade',
+    arcade: {
+      debug: true,
+    },
   },
   scene: [BootScene, PreloaderScene, HomeScene],
 };
