@@ -1,5 +1,6 @@
 import * as Phaser from 'phaser';
 import { ImageKeyEnum } from '../enum/ImageKeyEnum';
+import { RegisterDialogComponent } from '../components/RegisterDialogComponent';
 import { Scene } from 'phaser';
 import { SceneKeyEnum } from '../enum/SceneKeyEnum';
 
@@ -10,6 +11,7 @@ export class HomeScene extends Scene {
 
   private centerX: number;
   private centerY: number;
+  private registerDialogComponent: RegisterDialogComponent;
 
   init(): void {
     this.centerX = this.cameras.main.width / 2;
@@ -27,7 +29,7 @@ export class HomeScene extends Scene {
     this.createLogoText();
     const registerButton = this.createButton(this.centerX - 300, this.centerY + 100, 'Cadastrar');
     registerButton.on(Phaser.Input.Events.POINTER_DOWN, () => {
-      console.log('registerButton');
+      this.showRegisterDialog();
     });
     const loginButton = this.createButton(this.centerX + 100, this.centerY + 100, 'Logar');
     loginButton.on(Phaser.Input.Events.POINTER_DOWN, () => {
@@ -118,5 +120,15 @@ export class HomeScene extends Scene {
         align: 'right',
       })
       .setOrigin(1, 1);
+  }
+
+  private showRegisterDialog(): void {
+    this.registerDialogComponent = new RegisterDialogComponent(this);
+    this.registerDialogComponent.on(this.registerDialogComponent.event, this.restart, this);
+  }
+
+  private restart(): void {
+    console.log('enviou o emit');
+    this.scene.restart();
   }
 }

@@ -20,6 +20,9 @@ const config: Types.Core.GameConfig = {
       debug: true,
     },
   },
+  dom: {
+    createContainer: true,
+  },
   scene: [BootScene, PreloaderScene, HomeScene],
 };
 

@@ -24,6 +24,7 @@ export class PreloaderScene extends Scene {
       this.load.image(`logo_${index}`, 'assets/images/home_bg.jpg');
     }
     this.load.image(ImageKeyEnum.HomeBg, 'assets/images/home_bg.jpg');
+    this.loadPlugin();
   }
 
   create(): void {
@@ -63,5 +64,9 @@ export class PreloaderScene extends Scene {
     this.load.on(Phaser.Loader.Events.PROGRESS, (progress: number) => {
       progressIndicator.width = 4 + (barWidth - 8) * progress;
     });
+  }
+
+  private loadPlugin(): void {
+    this.load.plugin('rexinputtextplugin', 'assets/plugins/rexinputtextplugin.min.js', true);
   }
 }
