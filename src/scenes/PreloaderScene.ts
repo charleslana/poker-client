@@ -20,10 +20,9 @@ export class PreloaderScene extends Scene {
   }
 
   preload(): void {
-    for (let index = 0; index < 10; index++) {
-      this.load.image(`logo_${index}`, 'assets/images/home_bg.jpg');
-    }
     this.load.image(ImageKeyEnum.HomeBg, 'assets/images/home_bg.jpg');
+    this.load.image(ImageKeyEnum.CloseIcon, 'assets/images/close_icon.png');
+    this.load.image(ImageKeyEnum.DialogBg, 'assets/images/dialog_bg.png');
     this.loadPlugin();
   }
 

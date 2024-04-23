@@ -1,4 +1,6 @@
 import * as Phaser from 'phaser';
+import { ButtonComponent } from './ButtonComponent';
+import { ImageKeyEnum } from '../enum/ImageKeyEnum';
 
 export class RegisterDialogComponent extends Phaser.GameObjects.Container {
   constructor(scene: Phaser.Scene) {
@@ -6,6 +8,7 @@ export class RegisterDialogComponent extends Phaser.GameObjects.Container {
     this.createBlocker();
     this.createOverlay();
     this.createModalBackground();
+    this.createCloseButton();
     this.createText();
     this.createEmailInput();
     this.createPasswordInput();
@@ -20,7 +23,8 @@ export class RegisterDialogComponent extends Phaser.GameObjects.Container {
   private modalX = this.scene.cameras.main.width / 2;
   private modalY = this.scene.cameras.main.height / 2;
   private text: Phaser.GameObjects.Text;
-  private button: Phaser.GameObjects.Text;
+  // private button: Phaser.GameObjects.Text;
+  private buttonComponent: ButtonComponent;
 
   private createBlocker(): void {
     this.blocker = this.scene.add.rectangle(
@@ -51,17 +55,37 @@ export class RegisterDialogComponent extends Phaser.GameObjects.Container {
   }
 
   private createModalBackground(): void {
-    this.modalBackground = this.scene.add.rectangle(this.modalX, this.modalY, 500, 400, 0xffffff);
+    const backgroundImage = this.scene.add.image(this.modalX, this.modalY, ImageKeyEnum.DialogBg);
+    backgroundImage.setOrigin(0.5);
+    backgroundImage.setDepth(998);
+    this.modalBackground = this.scene.add.rectangle(this.modalX, this.modalY, 750, 500);
     this.modalBackground.setOrigin(0.5);
     this.modalBackground.setDepth(998);
   }
 
+  private createCloseButton(): void {
+    const closeButton = this.scene.add
+      .image(
+        this.modalX + this.modalBackground.width / 2 - 30,
+        this.modalY - this.modalBackground.height / 2 - 20,
+        ImageKeyEnum.CloseIcon
+      )
+      .setOrigin(0);
+    closeButton.setDepth(999);
+    closeButton.setInteractive({ cursor: 'pointer' });
+    closeButton.on(Phaser.Input.Events.POINTER_DOWN, () => {
+      this.emitButton();
+    });
+  }
+
   private createText(): void {
-    this.text = this.scene.add.text(this.modalX, this.modalY - 130, 'Cadastro', {
+    this.text = this.scene.add.text(this.modalX, this.modalY - 135, 'Cadastro', {
       fontFamily: 'Arial',
       fontSize: '24px',
-      color: '#000000',
+      color: '#ffffff',
       align: 'center',
+      stroke: '#000000',
+      strokeThickness: 2,
       wordWrap: {
         width: 480,
         useAdvancedWrap: true,
@@ -83,7 +107,9 @@ export class RegisterDialogComponent extends Phaser.GameObjects.Container {
       .text(this.modalX, this.modalY - 60, 'Digite seu e-mail abaixo', {
         fontFamily: 'Arial',
         fontSize: '24px',
-        color: '#000000',
+        color: '#ffffff',
+        stroke: '#000000',
+        strokeThickness: 2,
         align: 'center',
       })
       .setOrigin(0.5)
@@ -91,11 +117,14 @@ export class RegisterDialogComponent extends Phaser.GameObjects.Container {
     const inputText = this.scene.add
       .rexInputText(this.modalX, this.modalY - 10, 10, 10, {
         type: 'input',
-        text: 'example@example.com',
+        placeholder: 'example@example.com',
         fontSize: '24px',
-        color: '#808080',
+        color: '#ffffff',
+        stroke: '#000000',
+        strokeThickness: 2,
+        borderBottom: '1px solid #ffffff',
       })
-      .resize(300, 100)
+      .resize(300, 50)
       .setOrigin(0.5)
       // .on('textchange', function (inputText: any) {
       //   printText.text = inputText.text;
@@ -128,22 +157,27 @@ export class RegisterDialogComponent extends Phaser.GameObjects.Container {
 
   private createPasswordInput(): void {
     this.scene.add
-      .text(this.modalX, this.modalY + 40, 'Digite sua senha', {
+      .text(this.modalX, this.modalY + 50, 'Digite sua senha', {
         fontFamily: 'Arial',
         fontSize: '24px',
-        color: '#000000',
+        color: '#ffffff',
+        stroke: '#000000',
+        strokeThickness: 2,
         align: 'center',
       })
       .setOrigin(0.5)
       .setDepth(999);
     const inputText = this.scene.add
-      .rexInputText(this.modalX, this.modalY + 80, 10, 10, {
-        type: 'input',
-        text: '*********',
+      .rexInputText(this.modalX, this.modalY + 90, 10, 10, {
+        type: 'password',
+        placeholder: '*********',
         fontSize: '24px',
-        color: '#808080',
+        color: '#ffffff',
+        stroke: '#000000',
+        strokeThickness: 2,
+        borderBottom: '1px solid #ffffff',
       })
-      .resize(300, 100)
+      .resize(300, 50)
       .setOrigin(0.5)
       // .on('textchange', function (inputText: any) {
       //   printText.text = inputText.text;
@@ -175,24 +209,33 @@ export class RegisterDialogComponent extends Phaser.GameObjects.Container {
   }
 
   private createButton(): void {
-    this.button = this.scene.add.text(this.modalX, this.modalY + 150, 'Fechar', {
-      fontFamily: 'Arial',
-      fontSize: '24px',
-      color: '#ffffff',
-      backgroundColor: '#007bff',
-      padding: {
-        left: 10,
-        right: 10,
-        top: 5,
-        bottom: 5,
-      },
+    this.buttonComponent = new ButtonComponent(this.scene);
+    const registerButton = this.buttonComponent.createButton(
+      this.modalX - 100,
+      this.modalY + 150,
+      'Cadastrar'
+    );
+    registerButton.setDepth(999).on(Phaser.Input.Events.POINTER_DOWN, () => {
+      console.log('register');
     });
-    this.button.setOrigin(0.5);
-    this.button.setDepth(999);
-    this.button.setInteractive({ cursor: 'pointer' });
-    this.button.on(Phaser.Input.Events.POINTER_DOWN, () => {
-      this.emitButton();
-    });
+    // this.button = this.scene.add.text(this.modalX, this.modalY + 150, 'Fechar', {
+    //   fontFamily: 'Arial',
+    //   fontSize: '24px',
+    //   color: '#ffffff',
+    //   backgroundColor: '#007bff',
+    //   padding: {
+    //     left: 10,
+    //     right: 10,
+    //     top: 5,
+    //     bottom: 5,
+    //   },
+    // });
+    // this.button.setOrigin(0.5);
+    // this.button.setDepth(999);
+    // this.button.setInteractive({ cursor: 'pointer' });
+    // this.button.on(Phaser.Input.Events.POINTER_DOWN, () => {
+    //   this.emitButton();
+    // });
   }
 
   private emitButton(): void {
@@ -201,6 +244,6 @@ export class RegisterDialogComponent extends Phaser.GameObjects.Container {
     this.overlay.destroy();
     this.modalBackground.destroy();
     this.text.destroy();
-    this.button.destroy();
+    this.buttonComponent.destroy();
   }
 }
