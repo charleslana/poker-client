@@ -1,6 +1,6 @@
 import * as Phaser from 'phaser';
 import { ButtonComponent } from './ButtonComponent';
-import { ImageKeyEnum } from '@enum/ImageKeyEnum';
+import { ImageKeyEnum } from '@/enum/ImageKeyEnum';
 import { InputComponent } from './InputComponent';
 
 export class RegisterDialogComponent extends Phaser.GameObjects.Container {

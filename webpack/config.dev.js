@@ -14,11 +14,7 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.js', '.json'],
     alias: {
-      '@components': path.resolve(__dirname, '..', 'src', 'components'),
-      '@enum': path.resolve(__dirname, '..', 'src', 'enum'),
-      '@interface': path.resolve(__dirname, '..', 'src', 'interface'),
-      '@scenes': path.resolve(__dirname, '..', 'src', 'scenes'),
-      '@scenes': path.resolve(__dirname, '..', 'src', 'scenes'),
+      '@': path.resolve(__dirname, '..', 'src'),
     },
   },
   module: {

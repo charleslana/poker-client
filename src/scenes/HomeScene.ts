@@ -1,9 +1,9 @@
 import * as Phaser from 'phaser';
-import { ButtonComponent } from '@components/ButtonComponent';
-import { ImageKeyEnum } from '@enum/ImageKeyEnum';
-import { RegisterDialogComponent } from '@components/RegisterDialogComponent';
+import { ButtonComponent } from '@/components/ButtonComponent';
+import { ImageKeyEnum } from '@/enum/ImageKeyEnum';
+import { RegisterDialogComponent } from '@/components/RegisterDialogComponent';
 import { Scene } from 'phaser';
-import { SceneKeyEnum } from '@enum/SceneKeyEnum';
+import { SceneKeyEnum } from '@/enum/SceneKeyEnum';
 
 export class HomeScene extends Scene {
   constructor() {

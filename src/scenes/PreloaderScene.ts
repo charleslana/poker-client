@@ -1,7 +1,7 @@
 import * as Phaser from 'phaser';
-import { ImageKeyEnum } from '@enum/ImageKeyEnum';
+import { ImageKeyEnum } from '@/enum/ImageKeyEnum';
 import { Scene } from 'phaser';
-import { SceneKeyEnum } from '@enum/SceneKeyEnum';
+import { SceneKeyEnum } from '@/enum/SceneKeyEnum';
 
 export class PreloaderScene extends Scene {
   constructor() {

@@ -1,5 +1,5 @@
 import * as Phaser from 'phaser';
-import { IInput } from '@interface/IInput';
+import { IInput } from '@/interface/IInput';
 
 export class InputComponent extends Phaser.GameObjects.Container {
   constructor(scene: Phaser.Scene) {
