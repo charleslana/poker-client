@@ -1,6 +1,7 @@
 import * as Phaser from 'phaser';
 import { ButtonComponent } from './ButtonComponent';
-import { ImageKeyEnum } from '../enum/ImageKeyEnum';
+import { ImageKeyEnum } from '@enum/ImageKeyEnum';
+import { InputComponent } from './InputComponent';
 
 export class RegisterDialogComponent extends Phaser.GameObjects.Container {
   constructor(scene: Phaser.Scene) {
@@ -25,6 +26,7 @@ export class RegisterDialogComponent extends Phaser.GameObjects.Container {
   private inputPassword: Phaser.GameObjects.Text;
   private passwordValue: string;
   private registerButton: Phaser.GameObjects.Container;
+  private inputComponent = new InputComponent(this.scene);
 
   private createDialog(): void {
     this.createBlocker();
@@ -127,22 +129,16 @@ export class RegisterDialogComponent extends Phaser.GameObjects.Container {
   }
 
   private createEmailInput(): void {
-    this.inputEmail = this.scene.add
-      .rexInputText(this.mainCenterX, this.mainCenterY - 10, 10, 10, {
-        type: 'input',
-        placeholder: 'example@example.com',
-        fontSize: '24px',
-        color: '#ffffff',
-        stroke: '#000000',
-        strokeThickness: 2,
-        borderBottom: '1px solid #ffffff',
-      })
-      .resize(300, 50)
-      .setOrigin(0.5)
-      .on('textchange', (inputText: any) => {
-        this.emailValue = inputText.text;
-        console.log(this.emailValue);
-      });
+    this.inputEmail = this.inputComponent.createInput({
+      positionX: this.mainCenterX,
+      positionY: this.mainCenterY - 10,
+      type: 'text',
+      placeholder: 'example@example.com',
+    });
+    this.inputEmail.on('textchange', (inputText: any) => {
+      this.emailValue = inputText.text;
+      console.log(this.emailValue);
+    });
   }
 
   private createPasswordText(): void {
@@ -160,22 +156,16 @@ export class RegisterDialogComponent extends Phaser.GameObjects.Container {
   }
 
   private createPasswordInput(): void {
-    this.inputPassword = this.scene.add
-      .rexInputText(this.mainCenterX, this.mainCenterY + 90, 10, 10, {
-        type: 'password',
-        placeholder: '*********',
-        fontSize: '24px',
-        color: '#ffffff',
-        stroke: '#000000',
-        strokeThickness: 2,
-        borderBottom: '1px solid #ffffff',
-      })
-      .resize(300, 50)
-      .setOrigin(0.5)
-      .on('textchange', (inputText: any) => {
-        this.passwordValue = inputText.text;
-        console.log(this.passwordValue);
-      });
+    this.inputPassword = this.inputComponent.createInput({
+      positionX: this.mainCenterX,
+      positionY: this.mainCenterY + 90,
+      type: 'password',
+      placeholder: '*********',
+    });
+    this.inputPassword.on('textchange', (inputText: any) => {
+      this.passwordValue = inputText.text;
+      console.log(this.passwordValue);
+    });
   }
 
   private createRegisterButton(): void {

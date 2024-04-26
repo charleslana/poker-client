@@ -1,23 +1,23 @@
 import * as Phaser from 'phaser';
-import { ButtonComponent } from '../components/ButtonComponent';
-import { ImageKeyEnum } from '../enum/ImageKeyEnum';
-import { RegisterDialogComponent } from '../components/RegisterDialogComponent';
+import { ButtonComponent } from '@components/ButtonComponent';
+import { ImageKeyEnum } from '@enum/ImageKeyEnum';
+import { RegisterDialogComponent } from '@components/RegisterDialogComponent';
 import { Scene } from 'phaser';
-import { SceneKeyEnum } from '../enum/SceneKeyEnum';
+import { SceneKeyEnum } from '@enum/SceneKeyEnum';
 
 export class HomeScene extends Scene {
   constructor() {
     super(SceneKeyEnum.HomeScene);
   }
 
-  private centerX: number;
-  private centerY: number;
+  private mainCenterX: number;
+  private mainCenterY: number;
   private registerDialogComponent: RegisterDialogComponent;
   private buttonComponent: ButtonComponent;
 
   init(): void {
-    this.centerX = this.cameras.main.width / 2;
-    this.centerY = this.cameras.main.height / 2;
+    this.mainCenterX = this.cameras.main.width / 2;
+    this.mainCenterY = this.cameras.main.height / 2;
     this.createBg();
     this.createUI();
   }
@@ -31,16 +31,16 @@ export class HomeScene extends Scene {
     this.createLogoText();
     this.buttonComponent = new ButtonComponent(this);
     const registerButton = this.buttonComponent.createButton(
-      this.centerX - 300,
-      this.centerY + 100,
+      this.mainCenterX - 300,
+      this.mainCenterY + 100,
       'Cadastrar'
     );
     registerButton.on(Phaser.Input.Events.POINTER_DOWN, () => {
       this.showRegisterDialog();
     });
     const loginButton = this.buttonComponent.createButton(
-      this.centerX + 100,
-      this.centerY + 100,
+      this.mainCenterX + 100,
+      this.mainCenterY + 100,
       'Logar'
     );
     loginButton.on(Phaser.Input.Events.POINTER_DOWN, () => {
@@ -51,7 +51,7 @@ export class HomeScene extends Scene {
 
   private createLogoText(): void {
     const pokerText = this.add
-      .text(this.centerX, this.centerY - 100, 'Poker', {
+      .text(this.mainCenterX, this.mainCenterY - 100, 'Poker', {
         fontFamily: 'Arial',
         fontSize: '72px',
         color: '#ffffff',

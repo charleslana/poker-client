@@ -18,6 +18,13 @@ module.exports = {
   },
   resolve: {
     extensions: ['.ts', '.js', '.json'],
+    alias: {
+      '@components': path.resolve(__dirname, '..', 'src', 'components'),
+      '@enum': path.resolve(__dirname, '..', 'src', 'enum'),
+      '@interface': path.resolve(__dirname, '..', 'src', 'interface'),
+      '@scenes': path.resolve(__dirname, '..', 'src', 'scenes'),
+      '@scenes': path.resolve(__dirname, '..', 'src', 'scenes'),
+    },
   },
   devtool: false,
   performance: {
@@ -81,6 +88,12 @@ module.exports = {
         { from: 'public/favicon.png', to: 'favicon.png' },
         { from: 'public/style.css', to: 'style.css' },
       ],
+    }),
+    new webpack.EnvironmentPlugin({
+      NODE_ENV: 'production',
+      DEBUG: false,
+      npm_package_version: JSON.stringify(process.env.npm_package_version),
+      API_URL: 'http://localhost:8080/api',
     }),
   ],
 };

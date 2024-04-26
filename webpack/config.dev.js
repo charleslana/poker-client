@@ -13,6 +13,13 @@ module.exports = {
   },
   resolve: {
     extensions: ['.ts', '.js', '.json'],
+    alias: {
+      '@components': path.resolve(__dirname, '..', 'src', 'components'),
+      '@enum': path.resolve(__dirname, '..', 'src', 'enum'),
+      '@interface': path.resolve(__dirname, '..', 'src', 'interface'),
+      '@scenes': path.resolve(__dirname, '..', 'src', 'scenes'),
+      '@scenes': path.resolve(__dirname, '..', 'src', 'scenes'),
+    },
   },
   module: {
     rules: [
@@ -54,6 +61,12 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       template: './index.html',
+    }),
+    new webpack.EnvironmentPlugin({
+      NODE_ENV: 'development',
+      DEBUG: true,
+      npm_package_version: JSON.stringify(process.env.npm_package_version),
+      API_URL: 'http://localhost:8080/api',
     }),
   ],
 };

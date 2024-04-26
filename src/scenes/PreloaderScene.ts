@@ -1,19 +1,19 @@
 import * as Phaser from 'phaser';
-import { ImageKeyEnum } from '../enum/ImageKeyEnum';
+import { ImageKeyEnum } from '@enum/ImageKeyEnum';
 import { Scene } from 'phaser';
-import { SceneKeyEnum } from '../enum/SceneKeyEnum';
+import { SceneKeyEnum } from '@enum/SceneKeyEnum';
 
 export class PreloaderScene extends Scene {
   constructor() {
     super(SceneKeyEnum.PreloaderScene);
   }
 
-  private centerX: number;
-  private centerY: number;
+  private mainCenterX: number;
+  private mainCenterY: number;
 
   init(): void {
-    this.centerX = this.cameras.main.width / 2;
-    this.centerY = this.cameras.main.height / 2;
+    this.mainCenterX = this.cameras.main.width / 2;
+    this.mainCenterY = this.cameras.main.height / 2;
     this.createBg();
     this.createLoadingText();
     this.createProgressBar();
@@ -37,7 +37,7 @@ export class PreloaderScene extends Scene {
 
   private createLoadingText(): void {
     this.add
-      .text(this.centerX, this.centerY + 130, 'Carregando...', {
+      .text(this.mainCenterX, this.mainCenterY + 130, 'Carregando...', {
         fontFamily: 'Arial',
         fontSize: '24px',
         color: '#ffffff',
@@ -50,8 +50,8 @@ export class PreloaderScene extends Scene {
   private createProgressBar(): void {
     const barWidth = 468;
     const barHeight = 32;
-    const progressBarX = this.centerX;
-    const progressBarY = this.centerY + barHeight / 2 + 150;
+    const progressBarX = this.mainCenterX;
+    const progressBarY = this.mainCenterY + barHeight / 2 + 150;
     this.add.rectangle(progressBarX, progressBarY, barWidth, barHeight).setStrokeStyle(2, 0x000000);
     const progressIndicator = this.add.rectangle(
       progressBarX - barWidth / 2 + 4,

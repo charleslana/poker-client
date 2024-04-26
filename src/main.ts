@@ -1,15 +1,15 @@
 import * as Phaser from 'phaser';
-import { BootScene } from './scenes/BootScene';
+import { BootScene } from '@scenes/BootScene';
 import { Game, Types } from 'phaser';
-import { HomeScene } from './scenes/HomeScene';
-import { PreloaderScene } from './scenes/PreloaderScene';
+import { HomeScene } from '@scenes/HomeScene';
+import { PreloaderScene } from '@scenes/PreloaderScene';
 
 const config: Types.Core.GameConfig = {
   type: Phaser.AUTO,
   width: 1920,
   height: 1080,
   parent: 'game-container',
-  backgroundColor: '#ffffff',
+  backgroundColor: '#000000',
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
