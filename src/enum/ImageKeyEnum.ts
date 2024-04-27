@@ -2,5 +2,6 @@ export enum ImageKeyEnum {
   BootBg = 'BootBg',
   HomeBg = 'HomeBg',
   CloseIcon = 'CloseIcon',
-  DialogBg = 'DialogBg',
+  DialogRegisterBg = 'DialogRegisterBg',
+  DialogLoginBg = 'DialogLoginBg',
 }

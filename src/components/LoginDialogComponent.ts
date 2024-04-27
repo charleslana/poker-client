@@ -1,12 +1,13 @@
 import * as Phaser from 'phaser';
-import UserService from '@/service/UserService';
+import AuthService from '@/service/AuthService';
 import { ButtonComponent } from './ButtonComponent';
 import { ImageKeyEnum } from '@/enum/ImageKeyEnum';
 import { InputComponent } from './InputComponent';
 import { IResponse } from '@/interface/IResponse';
 import { isValidEmail } from '@/utils/utils';
+import { saveAccessToken } from '@/utils/localStorageUtils';
 
-export class RegisterDialogComponent extends Phaser.GameObjects.Container {
+export class LoginDialogComponent extends Phaser.GameObjects.Container {
   constructor(scene: Phaser.Scene) {
     super(scene);
     this.createDialog();
@@ -81,7 +82,7 @@ export class RegisterDialogComponent extends Phaser.GameObjects.Container {
     this.modalBackground = this.scene.add.image(
       this.mainCenterX,
       this.mainCenterY,
-      ImageKeyEnum.DialogRegisterBg
+      ImageKeyEnum.DialogLoginBg
     );
     this.modalBackground.setOrigin(0.5);
     this.modalBackground.setDepth(998);
@@ -103,7 +104,7 @@ export class RegisterDialogComponent extends Phaser.GameObjects.Container {
   }
 
   private createTitleText(): void {
-    this.titleText = this.scene.add.text(this.mainCenterX, this.mainCenterY - 135, 'Cadastro', {
+    this.titleText = this.scene.add.text(this.mainCenterX, this.mainCenterY - 135, 'Login', {
       fontFamily: 'Arial',
       fontSize: '24px',
       color: '#ffffff',
@@ -173,9 +174,9 @@ export class RegisterDialogComponent extends Phaser.GameObjects.Container {
 
   private createButton(): void {
     const button = new ButtonComponent(this.scene);
-    this.button = button.createButton(this.mainCenterX - 100, this.mainCenterY + 150, 'Cadastrar');
+    this.button = button.createButton(this.mainCenterX - 100, this.mainCenterY + 150, 'Entrar');
     this.button.setDepth(999).on(Phaser.Input.Events.POINTER_DOWN, () => {
-      this.register();
+      this.login();
     });
   }
 
@@ -214,19 +215,20 @@ export class RegisterDialogComponent extends Phaser.GameObjects.Container {
     this.emit(this.event);
   }
 
-  private async register(): Promise<void> {
+  private async login(): Promise<void> {
     this.errorMessage.setText('');
     if (!isValidEmail(this.emailValue)) {
       this.errorMessage.setText('E-mail inválido, ele deve ser válido e minúsculo');
       return;
     }
-    if (!this.passwordValue || this.passwordValue.length < 6) {
-      this.errorMessage.setText('A senha deve conter no mínimo 6 caracteres');
+    if (!this.passwordValue) {
+      this.errorMessage.setText('Você deve informar a senha');
       return;
     }
     this.disableButton();
     try {
-      await UserService.register(this.emailValue, this.passwordValue);
+      const accessToken = await AuthService.login(this.emailValue, this.passwordValue);
+      saveAccessToken(accessToken);
       this.emitButton();
     } catch (error) {
       const err = error as IResponse;

@@ -1,6 +1,7 @@
 import * as Phaser from 'phaser';
 import { ButtonComponent } from '@/components/ButtonComponent';
 import { ImageKeyEnum } from '@/enum/ImageKeyEnum';
+import { LoginDialogComponent } from '@/components/LoginDialogComponent';
 import { RegisterDialogComponent } from '@/components/RegisterDialogComponent';
 import { Scene } from 'phaser';
 import { SceneKeyEnum } from '@/enum/SceneKeyEnum';
@@ -13,6 +14,7 @@ export class HomeScene extends Scene {
   private mainCenterX: number;
   private mainCenterY: number;
   private registerDialogComponent: RegisterDialogComponent;
+  private loginDialogComponent: LoginDialogComponent;
   private buttonComponent: ButtonComponent;
 
   init(): void {
@@ -44,7 +46,7 @@ export class HomeScene extends Scene {
       'Logar'
     );
     loginButton.on(Phaser.Input.Events.POINTER_DOWN, () => {
-      console.log('loginButton');
+      this.showLoginDialog();
     });
     this.createFooterText();
   }
@@ -90,6 +92,11 @@ export class HomeScene extends Scene {
   private showRegisterDialog(): void {
     this.registerDialogComponent = new RegisterDialogComponent(this);
     this.registerDialogComponent.on(this.registerDialogComponent.event, this.restart, this);
+  }
+
+  private showLoginDialog(): void {
+    this.loginDialogComponent = new LoginDialogComponent(this);
+    this.loginDialogComponent.on(this.loginDialogComponent.event, this.restart, this);
   }
 
   private restart(): void {

@@ -22,7 +22,8 @@ export class PreloaderScene extends Scene {
   preload(): void {
     this.load.image(ImageKeyEnum.HomeBg, 'assets/images/home_bg.jpg');
     this.load.image(ImageKeyEnum.CloseIcon, 'assets/images/close_icon.png');
-    this.load.image(ImageKeyEnum.DialogBg, 'assets/images/dialog_bg.png');
+    this.load.image(ImageKeyEnum.DialogRegisterBg, 'assets/images/dialog_register_bg.png');
+    this.load.image(ImageKeyEnum.DialogLoginBg, 'assets/images/dialog_login_bg.png');
     this.loadPlugin();
   }
 

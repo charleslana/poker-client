@@ -13,20 +13,17 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+const reloadStatusCodes = [401, 403, 422, 429];
+
 api.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
-    if (error.response) {
-      if (error.response.status === 401 || error.response.status === 429) {
-        removeAccessToken();
+    if (error.response && reloadStatusCodes.includes(error.response.status)) {
+      const url = error!.config!.url;
+      if (!url || !url.includes('auth/login')) {
         location.reload();
+        removeAccessToken();
         return;
-      }
-      if (error.response.status === 403 || error.response.status === 422) {
-        const url = error!.config!.url!;
-        if (!url.includes('user/auth')) {
-          location.reload();
-        }
       }
     }
     return Promise.reject(error);
