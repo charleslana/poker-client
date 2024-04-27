@@ -1,7 +1,10 @@
 import * as Phaser from 'phaser';
+import UserService from '@/service/UserService';
 import { ButtonComponent } from './ButtonComponent';
 import { ImageKeyEnum } from '@/enum/ImageKeyEnum';
 import { InputComponent } from './InputComponent';
+import { IResponse } from '@/interface/IResponse';
+import { isValidEmail } from '@/utils/utils';
 
 export class RegisterDialogComponent extends Phaser.GameObjects.Container {
   constructor(scene: Phaser.Scene) {
@@ -27,6 +30,7 @@ export class RegisterDialogComponent extends Phaser.GameObjects.Container {
   private passwordValue: string;
   private registerButton: Phaser.GameObjects.Container;
   private inputComponent = new InputComponent(this.scene);
+  private errorMessage: Phaser.GameObjects.Text;
 
   private createDialog(): void {
     this.createBlocker();
@@ -39,6 +43,7 @@ export class RegisterDialogComponent extends Phaser.GameObjects.Container {
     this.createPasswordText();
     this.createPasswordInput();
     this.createRegisterButton();
+    this.createErroMessage();
   }
 
   private createBlocker(): void {
@@ -93,7 +98,7 @@ export class RegisterDialogComponent extends Phaser.GameObjects.Container {
     this.modalCloseButton.setDepth(999);
     this.modalCloseButton.setInteractive({ cursor: 'pointer' });
     this.modalCloseButton.on(Phaser.Input.Events.POINTER_DOWN, () => {
-      this.emitButton();
+      this.closeButton();
     });
   }
 
@@ -137,7 +142,6 @@ export class RegisterDialogComponent extends Phaser.GameObjects.Container {
     });
     this.inputEmail.on('textchange', (inputText: any) => {
       this.emailValue = inputText.text;
-      console.log(this.emailValue);
     });
   }
 
@@ -164,7 +168,6 @@ export class RegisterDialogComponent extends Phaser.GameObjects.Container {
     });
     this.inputPassword.on('textchange', (inputText: any) => {
       this.passwordValue = inputText.text;
-      console.log(this.passwordValue);
     });
   }
 
@@ -176,12 +179,25 @@ export class RegisterDialogComponent extends Phaser.GameObjects.Container {
       'Cadastrar'
     );
     this.registerButton.setDepth(999).on(Phaser.Input.Events.POINTER_DOWN, () => {
-      console.log('register');
+      this.register();
     });
   }
 
-  private emitButton(): void {
-    // this.emit(this.event);
+  private createErroMessage(): void {
+    this.errorMessage = this.scene.add
+      .text(this.mainCenterX, this.mainCenterY - 90, '', {
+        fontFamily: 'Arial',
+        fontSize: '18px',
+        color: '#ff0000',
+        stroke: '#000000',
+        strokeThickness: 2,
+        align: 'center',
+      })
+      .setOrigin(0.5)
+      .setDepth(999);
+  }
+
+  private closeButton(): void {
     this.blocker.destroy();
     this.overlay.destroy();
     this.modal.destroy();
@@ -195,5 +211,29 @@ export class RegisterDialogComponent extends Phaser.GameObjects.Container {
     this.inputPassword.destroy();
     this.passwordValue = '';
     this.registerButton.destroy();
+    this.errorMessage.destroy();
+  }
+
+  private emitButton(): void {
+    this.emit(this.event);
+  }
+
+  private async register(): Promise<void> {
+    this.errorMessage.setText('');
+    if (!isValidEmail(this.emailValue)) {
+      this.errorMessage.setText('E-mail inválido, ele deve ser válido e minúsculo');
+      return;
+    }
+    if (!this.passwordValue || this.passwordValue.length < 6) {
+      this.errorMessage.setText('A senha deve conter no mínimo 6 caracteres');
+      return;
+    }
+    try {
+      await UserService.register(this.emailValue, this.passwordValue);
+      this.emitButton();
+    } catch (error) {
+      const err = error as IResponse;
+      this.errorMessage.setText(err.response?.data.message ?? 'Error network');
+    }
   }
 }

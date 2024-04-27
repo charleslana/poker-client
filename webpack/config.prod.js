@@ -89,7 +89,7 @@ module.exports = {
       NODE_ENV: 'production',
       DEBUG: false,
       npm_package_version: JSON.stringify(process.env.npm_package_version),
-      API_URL: 'http://localhost:8080/api',
+      API_URL: 'http://localhost:3000',
     }),
   ],
 };
