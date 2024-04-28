@@ -1,8 +1,12 @@
 import * as Phaser from 'phaser';
+import AuthService from '@/service/AuthService';
+import UserService from '@/service/UserService';
 import { ButtonComponent } from '@/components/ButtonComponent';
+import { ChangeNameDialogComponent } from '@/components/ChangeNameDialogComponent';
 import { ImageKeyEnum } from '@/enum/ImageKeyEnum';
 import { LoginDialogComponent } from '@/components/LoginDialogComponent';
 import { RegisterDialogComponent } from '@/components/RegisterDialogComponent';
+import { saveAccessToken } from '@/utils/localStorageUtils';
 import { Scene } from 'phaser';
 import { SceneKeyEnum } from '@/enum/SceneKeyEnum';
 
@@ -15,13 +19,20 @@ export class HomeScene extends Scene {
   private mainCenterY: number;
   private registerDialogComponent: RegisterDialogComponent;
   private loginDialogComponent: LoginDialogComponent;
+  private changeNameDialogComponent: ChangeNameDialogComponent;
   private buttonComponent: ButtonComponent;
+  private registerButton: Phaser.GameObjects.Container;
+  private loginButton: Phaser.GameObjects.Container;
+  private loadingImage: Phaser.GameObjects.Image;
+  private loadingText: Phaser.GameObjects.Text;
 
   init(): void {
     this.mainCenterX = this.cameras.main.width / 2;
     this.mainCenterY = this.cameras.main.height / 2;
     this.createBg();
     this.createUI();
+    this.createLoading();
+    this.hideLoading();
   }
 
   private createBg(): void {
@@ -32,20 +43,20 @@ export class HomeScene extends Scene {
   private createUI(): void {
     this.createLogoText();
     this.buttonComponent = new ButtonComponent(this);
-    const registerButton = this.buttonComponent.createButton(
+    this.registerButton = this.buttonComponent.createButton(
       this.mainCenterX - 300,
       this.mainCenterY + 100,
       'Cadastrar'
     );
-    registerButton.on(Phaser.Input.Events.POINTER_DOWN, () => {
+    this.registerButton.on(Phaser.Input.Events.POINTER_DOWN, () => {
       this.showRegisterDialog();
     });
-    const loginButton = this.buttonComponent.createButton(
+    this.loginButton = this.buttonComponent.createButton(
       this.mainCenterX + 100,
       this.mainCenterY + 100,
       'Logar'
     );
-    loginButton.on(Phaser.Input.Events.POINTER_DOWN, () => {
+    this.loginButton.on(Phaser.Input.Events.POINTER_DOWN, () => {
       this.showLoginDialog();
     });
     this.createFooterText();
@@ -91,16 +102,88 @@ export class HomeScene extends Scene {
 
   private showRegisterDialog(): void {
     this.registerDialogComponent = new RegisterDialogComponent(this);
-    this.registerDialogComponent.on(this.registerDialogComponent.event, this.restart, this);
+    this.registerDialogComponent.on(
+      this.registerDialogComponent.event,
+      (email: string, password: string) => this.auth(email, password),
+      this
+    );
+  }
+
+  private async auth(email: string, password: string): Promise<void> {
+    try {
+      const accessToken = await AuthService.login(email, password);
+      saveAccessToken(accessToken);
+      await this.getUserMe();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   private showLoginDialog(): void {
     this.loginDialogComponent = new LoginDialogComponent(this);
-    this.loginDialogComponent.on(this.loginDialogComponent.event, this.restart, this);
+    this.loginDialogComponent.on(this.loginDialogComponent.event, this.getUserMe, this);
+  }
+
+  private async getUserMe(): Promise<void> {
+    this.hideRegisterLoginButton();
+    this.showLoading();
+    try {
+      const getUserMe = await UserService.getMe();
+      if (!getUserMe.name) {
+        this.showChangeNameDialog();
+        return;
+      }
+      this.goToLobby();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      this.hideLoading();
+    }
+  }
+
+  private hideRegisterLoginButton(): void {
+    this.registerButton.setVisible(false);
+    this.loginButton.setVisible(false);
+  }
+
+  private hideLoading(): void {
+    this.loadingImage.setVisible(false);
+    this.loadingText.setVisible(false);
+  }
+
+  private showLoading(): void {
+    this.loadingImage.setVisible(true);
+    this.loadingText.setVisible(true);
+  }
+
+  private createLoading() {
+    this.loadingImage = this.add
+      .image(this.mainCenterX, this.mainCenterY, ImageKeyEnum.Loading)
+      .setScale(0.2);
+    this.loadingText = this.add.text(this.mainCenterX + 130, this.mainCenterY, 'Carregando...', {
+      fontFamily: 'Arial',
+      fontSize: '24px',
+      color: '#ffffff',
+    });
+    this.loadingImage.setOrigin(0.5);
+    this.loadingText.setOrigin(0.5);
+  }
+
+  private showChangeNameDialog(): void {
+    this.changeNameDialogComponent = new ChangeNameDialogComponent(this);
+    this.changeNameDialogComponent.on(this.changeNameDialogComponent.event, this.goToLobby, this);
+    this.changeNameDialogComponent.on(
+      this.changeNameDialogComponent.logoutEvent,
+      this.restart,
+      this
+    );
+  }
+
+  private goToLobby(): void {
+    this.scene.start(SceneKeyEnum.LobbyScene);
   }
 
   private restart(): void {
-    console.log('enviou o emit');
     this.scene.restart();
   }
 }

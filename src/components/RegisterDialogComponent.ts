@@ -98,7 +98,7 @@ export class RegisterDialogComponent extends Phaser.GameObjects.Container {
     this.modalCloseButton.setDepth(999);
     this.modalCloseButton.setInteractive({ cursor: 'pointer' });
     this.modalCloseButton.on(Phaser.Input.Events.POINTER_DOWN, () => {
-      this.closeButton();
+      this.closeModal();
     });
   }
 
@@ -193,7 +193,7 @@ export class RegisterDialogComponent extends Phaser.GameObjects.Container {
       .setDepth(999);
   }
 
-  private closeButton(): void {
+  private closeModal(): void {
     this.blocker.destroy();
     this.overlay.destroy();
     this.modal.destroy();
@@ -210,8 +210,9 @@ export class RegisterDialogComponent extends Phaser.GameObjects.Container {
     this.errorMessage.destroy();
   }
 
-  private emitButton(): void {
-    this.emit(this.event);
+  private emitEvent(): void {
+    this.emit(this.event, this.emailValue, this.passwordValue);
+    this.closeModal();
   }
 
   private async register(): Promise<void> {
@@ -227,11 +228,10 @@ export class RegisterDialogComponent extends Phaser.GameObjects.Container {
     this.disableButton();
     try {
       await UserService.register(this.emailValue, this.passwordValue);
-      this.emitButton();
+      this.emitEvent();
     } catch (error) {
       const err = error as IResponse;
       this.errorMessage.setText(err.response?.data.message ?? 'Error network');
-    } finally {
       this.enableButton();
     }
   }

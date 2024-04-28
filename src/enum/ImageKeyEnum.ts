@@ -4,4 +4,6 @@ export enum ImageKeyEnum {
   CloseIcon = 'CloseIcon',
   DialogRegisterBg = 'DialogRegisterBg',
   DialogLoginBg = 'DialogLoginBg',
+  Loading = 'Loading',
+  DialogChangeNameBg = 'DialogChangeNameBg',
 }
