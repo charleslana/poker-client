@@ -37,8 +37,7 @@ export class HomeScene extends Scene {
 
   create(): void {
     if (isAuthenticated()) {
-      //TODO add refresh token
-      console.log('authenticated');
+      this.getUserMe();
     }
   }
 
