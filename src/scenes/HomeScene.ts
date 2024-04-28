@@ -4,9 +4,9 @@ import UserService from '@/service/UserService';
 import { ButtonComponent } from '@/components/ButtonComponent';
 import { ChangeNameDialogComponent } from '@/components/ChangeNameDialogComponent';
 import { ImageKeyEnum } from '@/enum/ImageKeyEnum';
+import { isAuthenticated, saveAccessToken } from '@/utils/localStorageUtils';
 import { LoginDialogComponent } from '@/components/LoginDialogComponent';
 import { RegisterDialogComponent } from '@/components/RegisterDialogComponent';
-import { saveAccessToken } from '@/utils/localStorageUtils';
 import { Scene } from 'phaser';
 import { SceneKeyEnum } from '@/enum/SceneKeyEnum';
 
@@ -33,6 +33,13 @@ export class HomeScene extends Scene {
     this.createUI();
     this.createLoading();
     this.hideLoading();
+  }
+
+  create(): void {
+    if (isAuthenticated()) {
+      //TODO add refresh token
+      console.log('authenticated');
+    }
   }
 
   private createBg(): void {
