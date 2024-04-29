@@ -1,3 +1,5 @@
+import { ImageKeyEnum } from '@/enum/ImageKeyEnum';
+import { removeAccessToken } from '@/utils/localStorageUtils';
 import { Scene } from 'phaser';
 import { SceneKeyEnum } from '@/enum/SceneKeyEnum';
 
@@ -7,13 +9,77 @@ export class LobbyScene extends Scene {
   }
 
   create(): void {
-    this.add
-      .text(0, 0, 'Lobby', {
+    this.createBg();
+    this.createHeader();
+    this.createMainSection();
+  }
+
+  private createHeader(): void {
+    this.createNameText();
+    this.createLobbyText();
+    this.createCloseButton();
+  }
+
+  private createBg(): void {
+    const bootBg = this.add.image(0, 0, ImageKeyEnum.HomeBg).setOrigin(0);
+    bootBg.setDisplaySize(this.cameras.main.width, this.cameras.main.height);
+  }
+
+  private createNameText(): void {
+    const textX = 10;
+    const textY = 30;
+    const text = this.add
+      .text(textX, textY, 'Charles Nv. 1', {
         fontFamily: 'Arial',
-        fontSize: '20px',
+        fontSize: '30px',
         color: '#ffffff',
-        align: 'center',
       })
-      .setOrigin(0);
+      .setOrigin(0, 0.5);
+    text.setX(textX);
+  }
+
+  private createLobbyText(): void {
+    const centerX = this.cameras.main.width / 2;
+    const centerY = 30;
+    const text = this.add
+      .text(centerX, centerY, 'LOBBY', {
+        fontFamily: 'Arial',
+        fontSize: '32px',
+        color: '#ffffff',
+      })
+      .setOrigin(0.5, 0);
+    text.setX(centerX - text.width / 2);
+  }
+
+  private createCloseButton(): void {
+    const closeButton = this.add
+      .image(this.cameras.main.width - 10, 10, ImageKeyEnum.CloseIcon)
+      .setOrigin(1, 0);
+    closeButton.setInteractive({ cursor: 'pointer' });
+    closeButton.on(Phaser.Input.Events.POINTER_DOWN, () => {
+      this.logout();
+    });
+  }
+
+  private logout(): void {
+    removeAccessToken();
+    this.scene.start(SceneKeyEnum.HomeScene);
+  }
+
+  private createMainSection(): void {
+    const containerWidth = this.cameras.main.width * 0.95;
+    const containerHeight = this.cameras.main.height * 0.7;
+
+    const container = this.add.container(0, 0);
+    container.setSize(containerWidth, containerHeight);
+    container.setPosition(45, 100);
+
+    const graphics = this.add.graphics();
+    graphics.fillGradientStyle(0x333333, 0x333333, 0x888888, 0x888888, 1);
+    graphics.fillRect(0, 0, containerWidth, containerHeight);
+
+    graphics.lineStyle(2, 0xffff00, 1);
+    graphics.strokeRect(0, 0, containerWidth, containerHeight);
+    container.add([graphics]);
   }
 }
