@@ -142,6 +142,7 @@ export class HomeScene extends Scene {
       this.goToLobby();
     } catch (error) {
       console.log(error);
+      this.showRegisterLoginButton();
     } finally {
       this.hideLoading();
     }
@@ -150,6 +151,11 @@ export class HomeScene extends Scene {
   private hideRegisterLoginButton(): void {
     this.registerButton.setVisible(false);
     this.loginButton.setVisible(false);
+  }
+
+  private showRegisterLoginButton(): void {
+    this.registerButton.setVisible(true);
+    this.loginButton.setVisible(true);
   }
 
   private hideLoading(): void {
