@@ -69,11 +69,3 @@ declare module '*.fs' {
   const src: string;
   export default src;
 }
-
-declare module 'phaser' {
-  namespace GameObjects {
-    interface GameObjectFactory {
-      rexInputText: any;
-    }
-  }
-}

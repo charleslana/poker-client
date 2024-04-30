@@ -23,10 +23,10 @@ export class RegisterDialogComponent extends Phaser.GameObjects.Container {
   private mainCenterY = this.scene.cameras.main.height / 2;
   private titleText: Phaser.GameObjects.Text;
   private emailText: Phaser.GameObjects.Text;
-  private inputEmail: Phaser.GameObjects.Text;
+  private inputEmail: Phaser.GameObjects.DOMElement;
   private emailValue: string;
   private passwordText: Phaser.GameObjects.Text;
-  private inputPassword: Phaser.GameObjects.Text;
+  private inputPassword: Phaser.GameObjects.DOMElement;
   private passwordValue: string;
   private button: Phaser.GameObjects.Container;
   private inputComponent = new InputComponent(this.scene);
@@ -121,7 +121,7 @@ export class RegisterDialogComponent extends Phaser.GameObjects.Container {
 
   private createEmailText(): void {
     this.emailText = this.scene.add
-      .text(this.mainCenterX, this.mainCenterY - 60, 'Digite seu e-mail abaixo', {
+      .text(this.mainCenterX, this.mainCenterY - 80, 'Digite seu e-mail abaixo', {
         fontFamily: 'Arial',
         fontSize: '24px',
         color: '#ffffff',
@@ -134,20 +134,16 @@ export class RegisterDialogComponent extends Phaser.GameObjects.Container {
   }
 
   private createEmailInput(): void {
-    this.inputEmail = this.inputComponent.createInput({
-      positionX: this.mainCenterX,
-      positionY: this.mainCenterY - 10,
-      type: 'text',
-      placeholder: 'example@example.com',
-    });
-    this.inputEmail.on('textchange', (inputText: any) => {
-      this.emailValue = inputText.text;
+    this.inputEmail = this.inputComponent.createInput(this.mainCenterX, this.mainCenterY - 30);
+    this.inputEmail.on('input', (event: Event) => {
+      const inputValue = (event.target as HTMLInputElement).value;
+      this.emailValue = inputValue;
     });
   }
 
   private createPasswordText(): void {
     this.passwordText = this.scene.add
-      .text(this.mainCenterX, this.mainCenterY + 50, 'Digite sua senha', {
+      .text(this.mainCenterX, this.mainCenterY + 30, 'Digite sua senha', {
         fontFamily: 'Arial',
         fontSize: '24px',
         color: '#ffffff',
@@ -160,14 +156,14 @@ export class RegisterDialogComponent extends Phaser.GameObjects.Container {
   }
 
   private createPasswordInput(): void {
-    this.inputPassword = this.inputComponent.createInput({
-      positionX: this.mainCenterX,
-      positionY: this.mainCenterY + 90,
-      type: 'password',
-      placeholder: '*********',
-    });
-    this.inputPassword.on('textchange', (inputText: any) => {
-      this.passwordValue = inputText.text;
+    this.inputPassword = this.inputComponent.createInput(
+      this.mainCenterX,
+      this.mainCenterY + 70,
+      true
+    );
+    this.inputPassword.on('input', (event: Event) => {
+      const inputValue = (event.target as HTMLInputElement).value;
+      this.passwordValue = inputValue;
     });
   }
 
@@ -181,7 +177,7 @@ export class RegisterDialogComponent extends Phaser.GameObjects.Container {
 
   private createErroMessage(): void {
     this.errorMessage = this.scene.add
-      .text(this.mainCenterX, this.mainCenterY - 90, '', {
+      .text(this.mainCenterX, this.mainCenterY + 300, '', {
         fontFamily: 'Arial',
         fontSize: '18px',
         color: '#ff0000',

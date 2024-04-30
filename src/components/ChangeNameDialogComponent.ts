@@ -24,7 +24,7 @@ export class ChangeNameDialogComponent extends Phaser.GameObjects.Container {
   private mainCenterX = this.scene.cameras.main.width / 2;
   private mainCenterY = this.scene.cameras.main.height / 2;
   private titleText: Phaser.GameObjects.Text;
-  private inputName: Phaser.GameObjects.Text;
+  private inputName: Phaser.GameObjects.DOMElement;
   private nameValue: string;
   private button: Phaser.GameObjects.Container;
   private inputComponent = new InputComponent(this.scene);
@@ -100,7 +100,7 @@ export class ChangeNameDialogComponent extends Phaser.GameObjects.Container {
   private createTitleText(): void {
     this.titleText = this.scene.add.text(
       this.mainCenterX,
-      this.mainCenterY - 135,
+      this.mainCenterY - 80,
       'Qual é o seu nome?',
       {
         fontFamily: 'Arial',
@@ -120,13 +120,10 @@ export class ChangeNameDialogComponent extends Phaser.GameObjects.Container {
   }
 
   private createNameInput(): void {
-    this.inputName = this.inputComponent.createInput({
-      positionX: this.mainCenterX,
-      positionY: this.mainCenterY - 10,
-      type: 'text',
-    });
-    this.inputName.on('textchange', (inputText: any) => {
-      this.nameValue = inputText.text;
+    this.inputName = this.inputComponent.createInput(this.mainCenterX, this.mainCenterY - 30);
+    this.inputName.on('input', (event: Event) => {
+      const inputValue = (event.target as HTMLInputElement).value;
+      this.nameValue = inputValue;
     });
   }
 
@@ -140,7 +137,7 @@ export class ChangeNameDialogComponent extends Phaser.GameObjects.Container {
 
   private createErroMessage(): void {
     this.errorMessage = this.scene.add
-      .text(this.mainCenterX, this.mainCenterY - 90, '', {
+      .text(this.mainCenterX, this.mainCenterY + 300, '', {
         fontFamily: 'Arial',
         fontSize: '18px',
         color: '#ff0000',
