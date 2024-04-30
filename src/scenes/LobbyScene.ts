@@ -30,7 +30,7 @@ export class LobbyScene extends Scene {
     const textY = 30;
     const text = this.add
       .text(textX, textY, 'Name Nv. 1', {
-        fontFamily: 'Arial',
+        fontFamily: 'Roboto',
         fontSize: '30px',
         color: '#ffffff',
       })
@@ -43,8 +43,8 @@ export class LobbyScene extends Scene {
     const centerY = 30;
     const text = this.add
       .text(centerX, centerY, 'LOBBY', {
-        fontFamily: 'Arial',
-        fontSize: '32px',
+        fontFamily: 'Bebas',
+        fontSize: '42px',
         color: '#ffffff',
       })
       .setOrigin(0.5, 0);

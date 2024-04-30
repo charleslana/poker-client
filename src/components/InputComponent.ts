@@ -23,6 +23,7 @@ export class InputComponent extends Phaser.GameObjects.Container {
         background-color: rgba(255, 255, 255, 0);
         outline: none;
         color: white;
+        font-family: 'Roboto';
       `
     );
     input.node.setAttribute('type', 'text');

@@ -71,15 +71,15 @@ export class HomeScene extends Scene {
   private createLogoText(): void {
     const pokerText = this.add
       .text(this.mainCenterX, this.mainCenterY - 100, 'Poker', {
-        fontFamily: 'Arial',
-        fontSize: '72px',
+        fontFamily: 'Bebas',
+        fontSize: '82px',
         color: '#ffffff',
         align: 'center',
       })
       .setOrigin(0.5);
     this.add
       .text(pokerText.x + pokerText.width / 2, pokerText.y + pokerText.height / 2, 'com amigos', {
-        fontFamily: 'Arial',
+        fontFamily: 'Roboto',
         fontSize: '24px',
         color: '#ffffff',
         align: 'center',
@@ -90,7 +90,7 @@ export class HomeScene extends Scene {
   private createFooterText(): void {
     this.add
       .text(10, this.cameras.main.height - 20, 'Criado por Charles Lana', {
-        fontFamily: 'Arial',
+        fontFamily: 'Roboto',
         fontSize: '16px',
         color: '#ffffff',
         align: 'left',
@@ -98,7 +98,7 @@ export class HomeScene extends Scene {
       .setOrigin(0, 1);
     this.add
       .text(this.cameras.main.width - 10, this.cameras.main.height - 20, 'Versão 0.0.1', {
-        fontFamily: 'Arial',
+        fontFamily: 'Roboto',
         fontSize: '16px',
         color: '#ffffff',
         align: 'right',

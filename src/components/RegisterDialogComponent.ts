@@ -104,7 +104,7 @@ export class RegisterDialogComponent extends Phaser.GameObjects.Container {
 
   private createTitleText(): void {
     this.titleText = this.scene.add.text(this.mainCenterX, this.mainCenterY - 135, 'Cadastro', {
-      fontFamily: 'Arial',
+      fontFamily: 'Roboto',
       fontSize: '24px',
       color: '#ffffff',
       align: 'center',
@@ -122,7 +122,7 @@ export class RegisterDialogComponent extends Phaser.GameObjects.Container {
   private createEmailText(): void {
     this.emailText = this.scene.add
       .text(this.mainCenterX, this.mainCenterY - 80, 'Digite seu e-mail abaixo', {
-        fontFamily: 'Arial',
+        fontFamily: 'Roboto',
         fontSize: '24px',
         color: '#ffffff',
         stroke: '#000000',
@@ -144,7 +144,7 @@ export class RegisterDialogComponent extends Phaser.GameObjects.Container {
   private createPasswordText(): void {
     this.passwordText = this.scene.add
       .text(this.mainCenterX, this.mainCenterY + 30, 'Digite sua senha', {
-        fontFamily: 'Arial',
+        fontFamily: 'Roboto',
         fontSize: '24px',
         color: '#ffffff',
         stroke: '#000000',
@@ -178,7 +178,7 @@ export class RegisterDialogComponent extends Phaser.GameObjects.Container {
   private createErroMessage(): void {
     this.errorMessage = this.scene.add
       .text(this.mainCenterX, this.mainCenterY + 300, '', {
-        fontFamily: 'Arial',
+        fontFamily: 'Roboto',
         fontSize: '18px',
         color: '#ff0000',
         stroke: '#000000',

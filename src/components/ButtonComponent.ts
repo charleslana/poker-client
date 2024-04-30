@@ -29,7 +29,7 @@ export class ButtonComponent extends Phaser.GameObjects.Container {
   private createButtonText(text: string): Phaser.GameObjects.Text {
     return this.scene.add
       .text(0, 0, text, {
-        fontFamily: 'Arial',
+        fontFamily: 'TBF',
         fontSize: '24px',
         color: '#ffffff',
         align: 'center',
