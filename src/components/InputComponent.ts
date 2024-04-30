@@ -10,15 +10,27 @@ export class InputComponent extends Phaser.GameObjects.Container {
     positionY: number,
     isPassword?: boolean
   ): Phaser.GameObjects.DOMElement {
-    const textInput = this.scene.add
-      .dom(positionX, positionY)
-      .createFromCache('input')
-      .setOrigin(0.5);
-    textInput.addListener('input');
+    const input = this.scene.add.dom(
+      positionX,
+      positionY,
+      'input',
+      `
+        width: 250px;
+        padding: 10px;
+        font-size: 20px;
+        border: none;
+        border-bottom: 1px solid white;
+        background-color: rgba(255, 255, 255, 0);
+        outline: none;
+        color: white;
+      `
+    );
+    input.node.setAttribute('type', 'text');
+    input.node.setAttribute('placeholder', 'Preencha');
+    input.addListener('input');
     if (isPassword) {
-      const inputElement = textInput.node.querySelector('.input-form input') as HTMLInputElement;
-      inputElement.type = 'password';
+      input.node.setAttribute('type', 'password');
     }
-    return textInput;
+    return input;
   }
 }

@@ -13,3 +13,7 @@ body {
   justify-content: center;
   align-items: center;
 }
+
+::-webkit-input-placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}

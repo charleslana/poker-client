@@ -26,7 +26,6 @@ export class PreloaderScene extends Scene {
     this.load.image(ImageKeyEnum.DialogLoginBg, 'assets/images/dialog_login_bg.png');
     this.load.image(ImageKeyEnum.Loading, 'assets/images/loading.png');
     this.load.image(ImageKeyEnum.DialogChangeNameBg, 'assets/images/dialog_change_name_bg.png');
-    this.loadingHTML();
   }
 
   create(): void {
@@ -66,9 +65,5 @@ export class PreloaderScene extends Scene {
     this.load.on(Phaser.Loader.Events.PROGRESS, (progress: number) => {
       progressIndicator.width = 4 + (barWidth - 8) * progress;
     });
-  }
-
-  private loadingHTML(): void {
-    this.load.html('input', 'assets/html/input.html');
   }
 }
