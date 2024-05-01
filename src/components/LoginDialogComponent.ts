@@ -18,7 +18,7 @@ export class LoginDialogComponent extends Phaser.GameObjects.Container {
   private blocker: Phaser.GameObjects.Rectangle;
   private overlay: Phaser.GameObjects.Rectangle;
   private modal: Phaser.GameObjects.Rectangle;
-  private modalBackground: Phaser.GameObjects.Image;
+  private modalGraphics: Phaser.GameObjects.Graphics;
   private modalCloseButton: Phaser.GameObjects.Image;
   private mainCenterX = this.scene.cameras.main.width / 2;
   private mainCenterY = this.scene.cameras.main.height / 2;
@@ -36,7 +36,7 @@ export class LoginDialogComponent extends Phaser.GameObjects.Container {
   private createDialog(): void {
     this.createBlocker();
     this.createOverlay();
-    this.createModalBackground();
+    this.createModal();
     this.createCloseButton();
     this.createTitleText();
     this.createEmailText();
@@ -75,17 +75,31 @@ export class LoginDialogComponent extends Phaser.GameObjects.Container {
     this.overlay.setDepth(997);
   }
 
-  private createModalBackground(): void {
+  private createModal(): void {
     this.modal = this.scene.add.rectangle(this.mainCenterX, this.mainCenterY, 750, 500);
     this.modal.setOrigin(0.5);
     this.modal.setDepth(998);
-    this.modalBackground = this.scene.add.image(
-      this.mainCenterX,
-      this.mainCenterY,
-      ImageKeyEnum.DialogLoginBg
+    this.createModalGraphics();
+  }
+
+  private createModalGraphics(): void {
+    this.modalGraphics = this.scene.add.graphics();
+    this.modalGraphics.fillGradientStyle(0x2084fe, 0x2084fe, 0x1931a4, 0x1931a4, 1);
+    this.modalGraphics.fillRect(
+      this.modal.displayOriginX + 210,
+      this.modal.displayOriginY + 40,
+      750,
+      500
     );
-    this.modalBackground.setOrigin(0.5);
-    this.modalBackground.setDepth(998);
+    this.modalGraphics.lineStyle(5, 0x49a1f1, 1);
+    this.modalGraphics.strokeRoundedRect(
+      this.modal.displayOriginX + 210,
+      this.modal.displayOriginY + 40,
+      750,
+      500,
+      10
+    );
+    this.modalGraphics.setDepth(998);
   }
 
   private createCloseButton(): void {
@@ -194,7 +208,7 @@ export class LoginDialogComponent extends Phaser.GameObjects.Container {
     this.blocker.destroy();
     this.overlay.destroy();
     this.modal.destroy();
-    this.modalBackground.destroy();
+    this.modalGraphics.destroy();
     this.modalCloseButton.destroy();
     this.titleText.destroy();
     this.emailText.destroy();

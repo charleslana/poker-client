@@ -44,9 +44,9 @@ export class ButtonComponent extends Phaser.GameObjects.Container {
     buttonHeight: number
   ): Phaser.GameObjects.Graphics {
     const graphics = this.scene.add.graphics();
-    graphics.fillStyle(0x0031ff);
-    graphics.fillRoundedRect(0, 0, buttonWidth, buttonHeight, 10);
-    graphics.lineStyle(2, 0x143787);
+    graphics.fillGradientStyle(0x0022ff, 0x0022ff, 0x0089ff, 0x0089ff, 1);
+    graphics.fillRect(2, 0, buttonWidth - 4, buttonHeight);
+    graphics.lineStyle(5, 0x060e64);
     graphics.strokeRoundedRect(0, 0, buttonWidth, buttonHeight, 10);
     return graphics;
   }

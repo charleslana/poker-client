@@ -20,10 +20,10 @@ export class InputComponent extends Phaser.GameObjects.Container {
         padding: 10px;
         font-size: 20px;
         border: none;
-        border-bottom: 1px solid white;
-        background-color: rgba(255, 255, 255, 0);
+        border: 1px solid black;
+        background-color: rgba(255, 255, 255, 1);
         outline: none;
-        color: white;
+        color: black;
         font-family: 'ArianHeavy';
       `
     );

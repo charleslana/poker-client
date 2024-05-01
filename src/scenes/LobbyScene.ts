@@ -47,7 +47,7 @@ export class LobbyScene extends Scene {
   }
 
   private createBg(): void {
-    const bootBg = this.add.image(0, 0, ImageKeyEnum.HomeBg).setOrigin(0);
+    const bootBg = this.add.image(0, 0, ImageKeyEnum.LobbyBg).setOrigin(0);
     bootBg.setDisplaySize(this.cameras.main.width, this.cameras.main.height);
   }
 
@@ -102,6 +102,7 @@ export class LobbyScene extends Scene {
     const headerGraphics = this.createHeaderGraphics(containerWidth);
     const messageGraphics = this.createMessageGraphics();
     const userListGraphics = this.createUserListGraphics();
+    const inputMessageGraphics = this.createInputMessageGraphics();
     this.createUserListDiv();
     this.createMessageListDiv();
     container.add([
@@ -111,6 +112,7 @@ export class LobbyScene extends Scene {
       userListGraphics,
       this.userListDiv,
       this.messageListDiv,
+      inputMessageGraphics,
     ]);
   }
 
@@ -120,7 +122,7 @@ export class LobbyScene extends Scene {
     const graphics = this.add.graphics();
     graphics.fillStyle(0xffffff, 0);
     graphics.fillRect(positionX, positionY, containerWidth, containerHeight);
-    graphics.lineStyle(3, 0xffff00, 1);
+    graphics.lineStyle(3, 0xe5d16a, 1);
     graphics.strokeRect(positionX, positionY, containerWidth, containerHeight);
     return graphics;
   }
@@ -132,7 +134,7 @@ export class LobbyScene extends Scene {
     const graphics = this.add.graphics();
     graphics.fillGradientStyle(0x333333, 0x333333, 0x888888, 0x888888, 1);
     graphics.fillRect(positionX, positionY, containerWidth, containerHeight);
-    graphics.lineStyle(3, 0xffff00, 1);
+    graphics.lineStyle(3, 0xe5d16a, 1);
     graphics.strokeRect(positionX, positionY, containerWidth, containerHeight);
     return graphics;
   }
@@ -145,7 +147,7 @@ export class LobbyScene extends Scene {
     const graphics = this.add.graphics();
     graphics.fillGradientStyle(0x373a97, 0x373a97, 0x535fb5, 0x535fb5, 1);
     graphics.fillRect(positionX, positionY, containerWidth, containerHeight);
-    graphics.lineStyle(3, 0xffff00, 1);
+    graphics.lineStyle(3, 0xe5d16a, 1);
     graphics.strokeRect(positionX, positionY, containerWidth, containerHeight);
     return graphics;
   }
@@ -158,7 +160,7 @@ export class LobbyScene extends Scene {
     const graphics = this.add.graphics();
     graphics.fillGradientStyle(0x373a97, 0x373a97, 0x535fb5, 0x535fb5, 1);
     graphics.fillRect(positionX, positionY, containerWidth, containerHeight);
-    graphics.lineStyle(3, 0xffff00, 1);
+    graphics.lineStyle(3, 0xe5d16a, 1);
     graphics.strokeRect(positionX, positionY, containerWidth, containerHeight);
     return graphics;
   }
@@ -378,5 +380,18 @@ export class LobbyScene extends Scene {
     const newMessageCount = this.messageList.length + additionalMessagesCount;
     this.generateMessageList(newMessageCount);
     this.updateMessageListDisplay();
+  }
+
+  private createInputMessageGraphics(): Phaser.GameObjects.Graphics {
+    const containerWidth = this.cameras.main.width * 0.9;
+    const containerHeight = this.cameras.main.height * 0.05;
+    const positionX = 0;
+    const positionY = this.cameras.main.height - this.cameras.main.height * 0.298;
+    const graphics = this.add.graphics();
+    graphics.fillStyle(0xffffff, 1);
+    graphics.fillRect(positionX, positionY, containerWidth, containerHeight);
+    graphics.lineStyle(3, 0xe5d16a, 1);
+    graphics.strokeRect(positionX, positionY, containerWidth, containerHeight);
+    return graphics;
   }
 }
