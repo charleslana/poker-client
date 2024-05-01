@@ -103,7 +103,7 @@ export class ChangeNameDialogComponent extends Phaser.GameObjects.Container {
       this.mainCenterY - 80,
       'Qual será seu nome?',
       {
-        fontFamily: 'Roboto',
+        fontFamily: 'ArianHeavy',
         fontSize: '24px',
         color: '#ffffff',
         align: 'center',
@@ -138,7 +138,7 @@ export class ChangeNameDialogComponent extends Phaser.GameObjects.Container {
   private createErroMessage(): void {
     this.errorMessage = this.scene.add
       .text(this.mainCenterX, this.mainCenterY + 300, '', {
-        fontFamily: 'Roboto',
+        fontFamily: 'ArianHeavy',
         fontSize: '18px',
         color: '#ff0000',
         stroke: '#000000',

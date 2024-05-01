@@ -6,4 +6,5 @@ export enum ImageKeyEnum {
   DialogLoginBg = 'DialogLoginBg',
   Loading = 'Loading',
   DialogChangeNameBg = 'DialogChangeNameBg',
+  StarIcon = 'StarIcon',
 }

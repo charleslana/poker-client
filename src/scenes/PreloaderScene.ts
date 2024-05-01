@@ -26,6 +26,7 @@ export class PreloaderScene extends Scene {
     this.load.image(ImageKeyEnum.DialogLoginBg, 'assets/images/dialog_login_bg.png');
     this.load.image(ImageKeyEnum.Loading, 'assets/images/loading.png');
     this.load.image(ImageKeyEnum.DialogChangeNameBg, 'assets/images/dialog_change_name_bg.png');
+    this.load.image(ImageKeyEnum.StarIcon, 'assets/images/star.png');
   }
 
   create(): void {
@@ -40,7 +41,7 @@ export class PreloaderScene extends Scene {
   private createLoadingText(): void {
     this.add
       .text(this.mainCenterX, this.mainCenterY + 130, 'Carregando...', {
-        fontFamily: 'Arial',
+        fontFamily: 'ArianHeavy',
         fontSize: '24px',
         color: '#ffffff',
         stroke: '#000000',

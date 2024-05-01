@@ -1,4 +1,5 @@
 import * as Phaser from 'phaser';
+import { IChat } from '@/interface/IChat';
 import { ImageKeyEnum } from '@/enum/ImageKeyEnum';
 import { removeAccessToken } from '@/utils/localStorageUtils';
 import { Scene } from 'phaser';
@@ -11,10 +12,12 @@ export class LobbyScene extends Scene {
 
   private userList: string[] = [];
   private userListDiv: Phaser.GameObjects.DOMElement;
+  private messageList: IChat[] = [];
   private messageListDiv: Phaser.GameObjects.DOMElement;
 
   init(): void {
     this.createUserList();
+    this.createMessageList();
   }
 
   create(): void {
@@ -24,9 +27,16 @@ export class LobbyScene extends Scene {
   }
 
   private createUserList(): void {
-    this.generateUserList(100);
+    this.generateUserList(50);
     this.input.keyboard!.on('keydown-ONE', () => {
       this.addMoreUsers();
+    });
+  }
+
+  private createMessageList(): void {
+    this.generateMessageList(1);
+    this.input.keyboard!.on('keydown-TWO', () => {
+      this.addMoreMessages();
     });
   }
 
@@ -45,8 +55,8 @@ export class LobbyScene extends Scene {
     const textX = 10;
     const textY = 30;
     const text = this.add
-      .text(textX, textY, 'Name Nv. 1', {
-        fontFamily: 'Roboto',
+      .text(textX, textY, 'User1', {
+        fontFamily: 'ArianHeavy',
         fontSize: '30px',
         color: '#ffffff',
       })
@@ -169,7 +179,7 @@ export class LobbyScene extends Scene {
         border: 0px solid red;
         background-color: rgba(255, 255, 255, 0);
         color: black;
-        font-family: 'Roboto';
+        font-family: 'ArianHeavy';
         overflow-y: scroll;
      `
     );
@@ -207,7 +217,7 @@ export class LobbyScene extends Scene {
   private createJElement(): HTMLDivElement {
     const jElement = document.createElement('div');
     jElement.textContent = 'J';
-    jElement.style.padding = '5px';
+    jElement.style.padding = '10px';
     jElement.style.backgroundColor = '#b23a1f';
     jElement.style.color = 'black';
     jElement.style.fontFamily = 'Bebas';
@@ -248,12 +258,125 @@ export class LobbyScene extends Scene {
         padding: 10px;
         font-size: 20px;
         border: none;
-        border: 1px solid red;
-        background-color: rgba(255, 255, 255, 1);
+        border: 0px solid red;
+        background-color: rgba(255, 255, 255, 0);
         color: black;
-        font-family: 'Roboto';
+        font-family: 'ArianHeavy';
         overflow-y: scroll;
      `
     );
+    this.updateMessageListDisplay();
+  }
+
+  private updateMessageListDisplay(): void {
+    this.clearMessageList();
+    this.messageList.forEach((chat) => {
+      const messageContainer = this.createMessageContainer(chat);
+      this.messageListDiv.node.appendChild(messageContainer);
+    });
+  }
+
+  private clearMessageList(): void {
+    this.messageListDiv.node.innerHTML = '';
+  }
+
+  private createMessageContainer(chat: IChat): HTMLDivElement {
+    const messageContainer = document.createElement('div');
+    messageContainer.style.display = 'flex';
+    messageContainer.style.flexDirection = 'row';
+    messageContainer.style.width = '100%';
+    messageContainer.style.marginBottom = '5px';
+    // messageContainer.style.backgroundColor = '#70706e';
+    const imageElement = this.createImageElement();
+    const nameElement = this.createChatContainer(chat);
+    messageContainer.appendChild(imageElement);
+    messageContainer.appendChild(nameElement);
+    return messageContainer;
+  }
+
+  private createImageElement(): HTMLImageElement {
+    const imageElement = document.createElement('img');
+    const texture = this.textures.getBase64(ImageKeyEnum.StarIcon);
+    imageElement.src = texture;
+    imageElement.style.width = '30px';
+    imageElement.style.height = '30px';
+    imageElement.style.borderRadius = '50%';
+    imageElement.style.paddingTop = '5px';
+    return imageElement;
+  }
+
+  private createMainContainer(chat: IChat): HTMLDivElement {
+    console.log(chat);
+    const mainContainer = document.createElement('div');
+    mainContainer.style.display = 'flex';
+    mainContainer.style.flexDirection = 'column';
+    return mainContainer;
+  }
+
+  private createInfoContainer(): HTMLDivElement {
+    const infoContainer = document.createElement('div');
+    infoContainer.style.display = 'flex';
+    infoContainer.style.flexDirection = 'row';
+    return infoContainer;
+  }
+
+  private createMessageUserNameElement(userName: string): HTMLDivElement {
+    const nameElement = document.createElement('div');
+    nameElement.textContent = userName;
+    nameElement.style.padding = '5px';
+    nameElement.style.color = 'yellow';
+    return nameElement;
+  }
+
+  private createDateElement(date: Date): HTMLDivElement {
+    const dateElement = document.createElement('div');
+    dateElement.textContent = this.formatDate(date);
+    dateElement.style.padding = '5px';
+    dateElement.style.color = 'white';
+    return dateElement;
+  }
+
+  private createMessageElement(message: string): HTMLDivElement {
+    const messageElement = document.createElement('div');
+    messageElement.textContent = message;
+    messageElement.style.padding = '5px';
+    messageElement.style.color = 'white';
+    return messageElement;
+  }
+
+  private formatDate(date: Date): string {
+    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
+  }
+
+  private createChatContainer(chat: IChat): HTMLDivElement {
+    const mainContainer = this.createMainContainer(chat);
+    const infoContainer = this.createInfoContainer();
+    const nameElement = this.createMessageUserNameElement('Server');
+    // const nameElement = this.createNameElement(chat.userName);
+    const dateElement = this.createDateElement(chat.date);
+    infoContainer.appendChild(nameElement);
+    infoContainer.appendChild(dateElement);
+    // const messageElement = this.createMessageElement(chat.message);
+    const messageElement = this.createMessageElement(
+      'Bem vindo, - User1! Se já existir um jogo em aberto você pode entrar e ver a partida, caso contrário você pode criar sua sala para que outros jogadores possam entrar.'
+    );
+    mainContainer.appendChild(infoContainer);
+    mainContainer.appendChild(messageElement);
+    return mainContainer;
+  }
+
+  private generateMessageList(count: number): void {
+    this.messageList = Array.from({ length: count }, (_, index) => ({
+      userName: `User${index + 1}`,
+      date: new Date(),
+      message: `Message ${index + 1}`,
+    }));
+  }
+
+  private addMoreMessages(): void {
+    const additionalMessagesCount = 50;
+    const newMessageCount = this.messageList.length + additionalMessagesCount;
+    this.generateMessageList(newMessageCount);
+    this.updateMessageListDisplay();
   }
 }

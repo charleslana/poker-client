@@ -8,7 +8,8 @@ export class InputComponent extends Phaser.GameObjects.Container {
   public createInput(
     positionX: number,
     positionY: number,
-    isPassword?: boolean
+    isPassword?: boolean,
+    placeholder = 'Preencha'
   ): Phaser.GameObjects.DOMElement {
     const input = this.scene.add.dom(
       positionX,
@@ -23,11 +24,11 @@ export class InputComponent extends Phaser.GameObjects.Container {
         background-color: rgba(255, 255, 255, 0);
         outline: none;
         color: white;
-        font-family: 'Roboto';
+        font-family: 'ArianHeavy';
       `
     );
     input.node.setAttribute('type', 'text');
-    input.node.setAttribute('placeholder', 'Preencha');
+    input.node.setAttribute('placeholder', placeholder);
     input.addListener('input');
     if (isPassword) {
       input.node.setAttribute('type', 'password');
