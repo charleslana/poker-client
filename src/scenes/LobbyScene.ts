@@ -9,7 +9,7 @@ export class LobbyScene extends Scene {
     super(SceneKeyEnum.LobbyScene);
   }
 
-  private userList: string[] = Array.from({ length: 100 }, (_, index) => `User${index + 1} - Nv.1`);
+  private userList: string[] = Array.from({ length: 100 }, (_, index) => `User${index + 1}`);
 
   create(): void {
     this.createBg();
