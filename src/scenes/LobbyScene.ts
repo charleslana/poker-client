@@ -11,6 +11,7 @@ export class LobbyScene extends Scene {
 
   private userList: string[] = [];
   private userListDiv: Phaser.GameObjects.DOMElement;
+  private messageListDiv: Phaser.GameObjects.DOMElement;
 
   init(): void {
     this.createUserList();
@@ -92,12 +93,14 @@ export class LobbyScene extends Scene {
     const messageGraphics = this.createMessageGraphics();
     const userListGraphics = this.createUserListGraphics();
     this.createUserListDiv();
+    this.createMessageListDiv();
     container.add([
       boxGraphics,
       headerGraphics,
       messageGraphics,
       userListGraphics,
       this.userListDiv,
+      this.messageListDiv,
     ]);
   }
 
@@ -168,9 +171,6 @@ export class LobbyScene extends Scene {
         color: black;
         font-family: 'Roboto';
         overflow-y: scroll;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
      `
     );
     this.updateUserListDisplay();
@@ -191,6 +191,8 @@ export class LobbyScene extends Scene {
   private createUserContainer(user: string): HTMLDivElement {
     const userContainer = document.createElement('div');
     userContainer.style.display = 'flex';
+    userContainer.style.flexDirection = 'row';
+    userContainer.style.alignItems = 'center';
     userContainer.style.width = '100%';
     userContainer.style.marginBottom = '5px';
     userContainer.style.backgroundColor = '#70706e';
@@ -231,5 +233,27 @@ export class LobbyScene extends Scene {
     const newUserCount = this.userList.length + additionalUsersCount;
     this.generateUserList(newUserCount);
     this.updateUserListDisplay();
+  }
+
+  private createMessageListDiv(): void {
+    const positionX = this.cameras.main.width - 1257;
+    const positionY = this.cameras.main.height - this.cameras.main.height * 0.56;
+    this.messageListDiv = this.add.dom(
+      positionX,
+      positionY,
+      'div',
+      `
+        width: 1318px;
+        height: 535px;
+        padding: 10px;
+        font-size: 20px;
+        border: none;
+        border: 1px solid red;
+        background-color: rgba(255, 255, 255, 1);
+        color: black;
+        font-family: 'Roboto';
+        overflow-y: scroll;
+     `
+    );
   }
 }
