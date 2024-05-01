@@ -1,3 +1,4 @@
+import * as Phaser from 'phaser';
 import { ImageKeyEnum } from '@/enum/ImageKeyEnum';
 import { removeAccessToken } from '@/utils/localStorageUtils';
 import { Scene } from 'phaser';
@@ -7,6 +8,8 @@ export class LobbyScene extends Scene {
   constructor() {
     super(SceneKeyEnum.LobbyScene);
   }
+
+  private userList: string[] = Array.from({ length: 100 }, (_, index) => `User${index + 1} - Nv.1`);
 
   create(): void {
     this.createBg();
@@ -76,7 +79,8 @@ export class LobbyScene extends Scene {
     const headerGraphics = this.createHeaderGraphics(containerWidth);
     const messageGraphics = this.createMessageGraphics();
     const userListGraphics = this.createUserListGraphics();
-    container.add([boxGraphics, headerGraphics, messageGraphics, userListGraphics]);
+    const userListDiv = this.createUserListDiv();
+    container.add([boxGraphics, headerGraphics, messageGraphics, userListGraphics, userListDiv]);
   }
 
   private createBoxGraphics(containerWidth: number, containerHeight: number) {
@@ -126,5 +130,58 @@ export class LobbyScene extends Scene {
     graphics.lineStyle(3, 0xffff00, 1);
     graphics.strokeRect(positionX, positionY, containerWidth, containerHeight);
     return graphics;
+  }
+
+  private createUserListDiv(): Phaser.GameObjects.DOMElement {
+    const positionX = this.cameras.main.width - 345;
+    const positionY = this.cameras.main.height - this.cameras.main.height * 0.56;
+    const div = this.add.dom(
+      positionX,
+      positionY,
+      'div',
+      `
+        width: 455px;
+        height: 535px;
+        padding: 10px;
+        font-size: 20px;
+        border: none;
+        border: 0px solid red;
+        background-color: rgba(255, 255, 255, 0);
+        color: black;
+        font-family: 'Roboto';
+        overflow-y: scroll;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+     `
+    );
+    this.userList.forEach((user) => {
+      const userContainer = document.createElement('div');
+      userContainer.style.display = 'flex';
+      userContainer.style.width = '100%';
+      userContainer.style.marginBottom = '5px';
+      userContainer.style.backgroundColor = '#70706e';
+      userContainer.style.borderRadius = '5px';
+
+      const jElement = document.createElement('div');
+      jElement.textContent = 'J';
+      jElement.style.padding = '5px';
+      jElement.style.backgroundColor = '#b23a1f';
+      jElement.style.color = 'black';
+      jElement.style.fontFamily = 'Bebas';
+      jElement.style.borderRadius = '5px';
+      jElement.style.fontSize = '20px';
+
+      const nameElement = document.createElement('div');
+      nameElement.textContent = user;
+      nameElement.style.padding = '5px';
+      nameElement.style.color = 'white';
+
+      userContainer.appendChild(jElement);
+      userContainer.appendChild(nameElement);
+
+      div.node.appendChild(userContainer);
+    });
+    return div;
   }
 }
