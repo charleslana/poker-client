@@ -9,12 +9,24 @@ export class LobbyScene extends Scene {
     super(SceneKeyEnum.LobbyScene);
   }
 
-  private userList: string[] = Array.from({ length: 100 }, (_, index) => `User${index + 1}`);
+  private userList: string[] = [];
+  private userListDiv: Phaser.GameObjects.DOMElement;
+
+  init(): void {
+    this.createUserList();
+  }
 
   create(): void {
     this.createBg();
     this.createHeader();
     this.createMainSection();
+  }
+
+  private createUserList(): void {
+    this.generateUserList(100);
+    this.input.keyboard!.on('keydown-ONE', () => {
+      this.addMoreUsers();
+    });
   }
 
   private createHeader(): void {
@@ -79,8 +91,14 @@ export class LobbyScene extends Scene {
     const headerGraphics = this.createHeaderGraphics(containerWidth);
     const messageGraphics = this.createMessageGraphics();
     const userListGraphics = this.createUserListGraphics();
-    const userListDiv = this.createUserListDiv();
-    container.add([boxGraphics, headerGraphics, messageGraphics, userListGraphics, userListDiv]);
+    this.createUserListDiv();
+    container.add([
+      boxGraphics,
+      headerGraphics,
+      messageGraphics,
+      userListGraphics,
+      this.userListDiv,
+    ]);
   }
 
   private createBoxGraphics(containerWidth: number, containerHeight: number) {
@@ -132,10 +150,10 @@ export class LobbyScene extends Scene {
     return graphics;
   }
 
-  private createUserListDiv(): Phaser.GameObjects.DOMElement {
+  private createUserListDiv(): void {
     const positionX = this.cameras.main.width - 345;
     const positionY = this.cameras.main.height - this.cameras.main.height * 0.56;
-    const div = this.add.dom(
+    this.userListDiv = this.add.dom(
       positionX,
       positionY,
       'div',
@@ -155,33 +173,63 @@ export class LobbyScene extends Scene {
         align-items: center;
      `
     );
+    this.updateUserListDisplay();
+  }
+
+  private updateUserListDisplay(): void {
+    this.clearUserList();
     this.userList.forEach((user) => {
-      const userContainer = document.createElement('div');
-      userContainer.style.display = 'flex';
-      userContainer.style.width = '100%';
-      userContainer.style.marginBottom = '5px';
-      userContainer.style.backgroundColor = '#70706e';
-      userContainer.style.borderRadius = '5px';
-
-      const jElement = document.createElement('div');
-      jElement.textContent = 'J';
-      jElement.style.padding = '5px';
-      jElement.style.backgroundColor = '#b23a1f';
-      jElement.style.color = 'black';
-      jElement.style.fontFamily = 'Bebas';
-      jElement.style.borderRadius = '5px';
-      jElement.style.fontSize = '20px';
-
-      const nameElement = document.createElement('div');
-      nameElement.textContent = user;
-      nameElement.style.padding = '5px';
-      nameElement.style.color = 'white';
-
-      userContainer.appendChild(jElement);
-      userContainer.appendChild(nameElement);
-
-      div.node.appendChild(userContainer);
+      const userContainer = this.createUserContainer(user);
+      this.userListDiv.node.appendChild(userContainer);
     });
-    return div;
+  }
+
+  private clearUserList(): void {
+    this.userListDiv.node.innerHTML = '';
+  }
+
+  private createUserContainer(user: string): HTMLDivElement {
+    const userContainer = document.createElement('div');
+    userContainer.style.display = 'flex';
+    userContainer.style.width = '100%';
+    userContainer.style.marginBottom = '5px';
+    userContainer.style.backgroundColor = '#70706e';
+    userContainer.style.borderRadius = '5px';
+    const jElement = this.createJElement();
+    const nameElement = this.createNameElement(user);
+    userContainer.appendChild(jElement);
+    userContainer.appendChild(nameElement);
+    return userContainer;
+  }
+
+  private createJElement(): HTMLDivElement {
+    const jElement = document.createElement('div');
+    jElement.textContent = 'J';
+    jElement.style.padding = '5px';
+    jElement.style.backgroundColor = '#b23a1f';
+    jElement.style.color = 'black';
+    jElement.style.fontFamily = 'Bebas';
+    jElement.style.borderRadius = '5px';
+    jElement.style.fontSize = '20px';
+    return jElement;
+  }
+
+  private createNameElement(userName: string): HTMLDivElement {
+    const nameElement = document.createElement('div');
+    nameElement.textContent = userName;
+    nameElement.style.padding = '5px';
+    nameElement.style.color = 'white';
+    return nameElement;
+  }
+
+  private generateUserList(count: number): void {
+    this.userList = Array.from({ length: count }, (_, index) => `User${index + 1}`);
+  }
+
+  private addMoreUsers(): void {
+    const additionalUsersCount = 50;
+    const newUserCount = this.userList.length + additionalUsersCount;
+    this.generateUserList(newUserCount);
+    this.updateUserListDisplay();
   }
 }
