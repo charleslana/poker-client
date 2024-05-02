@@ -1,4 +1,6 @@
 import * as Phaser from 'phaser';
+import { ButtonComponent } from '@/components/ButtonComponent';
+import { formatDate } from '@/utils/utils';
 import { IChat } from '@/interface/IChat';
 import { ImageKeyEnum } from '@/enum/ImageKeyEnum';
 import { removeAccessToken } from '@/utils/localStorageUtils';
@@ -14,6 +16,7 @@ export class LobbyScene extends Scene {
   private userListDiv: Phaser.GameObjects.DOMElement;
   private messageList: IChat[] = [];
   private messageListDiv: Phaser.GameObjects.DOMElement;
+  private messageInput: Phaser.GameObjects.DOMElement;
 
   init(): void {
     this.createUserList();
@@ -33,11 +36,29 @@ export class LobbyScene extends Scene {
     });
   }
 
-  private createMessageList(): void {
-    this.generateMessageList(1);
-    this.input.keyboard!.on('keydown-TWO', () => {
-      this.addMoreMessages();
+  private addMessageFromServer(): void {
+    this.messageList.push({
+      userName: '[Server]',
+      date: new Date(),
+      message:
+        'Bem vindo, - User1! Se já existir um jogo em aberto você pode entrar e ver a partida, caso contrário você pode criar sua sala para que outros jogadores possam entrar.',
     });
+  }
+
+  private createMessageList(): void {
+    this.addMessageFromServer();
+    this.input.keyboard!.on('keydown-ENTER', () => {
+      this.handleAddMessage();
+    });
+  }
+
+  private handleAddMessage(): void {
+    const input = this.messageInput.node as HTMLInputElement;
+    if (input.value.trim() !== '') {
+      this.addMessage('User1', input.value.trim());
+      input.value = '';
+      this.messageListDiv.node.scrollTop = this.messageListDiv.node.scrollHeight;
+    }
   }
 
   private createHeader(): void {
@@ -102,9 +123,13 @@ export class LobbyScene extends Scene {
     const headerGraphics = this.createHeaderGraphics(containerWidth);
     const messageGraphics = this.createMessageGraphics();
     const userListGraphics = this.createUserListGraphics();
-    const inputMessageGraphics = this.createInputMessageGraphics();
+    const messageInputGraphics = this.createMessageInputGraphics();
     this.createUserListDiv();
     this.createMessageListDiv();
+    this.createMessageInput();
+    this.createEnterButton(containerWidth, containerHeight);
+    this.createHostButton(containerHeight);
+    this.createJoinButton(containerHeight);
     container.add([
       boxGraphics,
       headerGraphics,
@@ -112,7 +137,7 @@ export class LobbyScene extends Scene {
       userListGraphics,
       this.userListDiv,
       this.messageListDiv,
-      inputMessageGraphics,
+      messageInputGraphics,
     ]);
   }
 
@@ -265,6 +290,7 @@ export class LobbyScene extends Scene {
         color: black;
         font-family: 'ArianHeavy';
         overflow-y: scroll;
+        word-break: break-word;
      `
     );
     this.updateMessageListDisplay();
@@ -288,12 +314,25 @@ export class LobbyScene extends Scene {
     messageContainer.style.flexDirection = 'row';
     messageContainer.style.width = '100%';
     messageContainer.style.marginBottom = '5px';
-    // messageContainer.style.backgroundColor = '#70706e';
-    const imageElement = this.createImageElement();
+    if (chat.userName === '[Server]') {
+      const imageElement = this.createImageElement();
+      messageContainer.appendChild(imageElement);
+    } else {
+      const imageElement = this.createEmptyElement();
+      messageContainer.appendChild(imageElement);
+    }
     const nameElement = this.createChatContainer(chat);
-    messageContainer.appendChild(imageElement);
     messageContainer.appendChild(nameElement);
     return messageContainer;
+  }
+
+  private createEmptyElement(): HTMLDivElement {
+    const divElement = document.createElement('div');
+    divElement.style.width = '30px';
+    divElement.style.height = '30px';
+    divElement.style.borderRadius = '50%';
+    divElement.style.paddingTop = '5px';
+    return divElement;
   }
 
   private createImageElement(): HTMLImageElement {
@@ -307,8 +346,7 @@ export class LobbyScene extends Scene {
     return imageElement;
   }
 
-  private createMainContainer(chat: IChat): HTMLDivElement {
-    console.log(chat);
+  private createMainContainer(): HTMLDivElement {
     const mainContainer = document.createElement('div');
     mainContainer.style.display = 'flex';
     mainContainer.style.flexDirection = 'column';
@@ -326,13 +364,17 @@ export class LobbyScene extends Scene {
     const nameElement = document.createElement('div');
     nameElement.textContent = userName;
     nameElement.style.padding = '5px';
-    nameElement.style.color = 'yellow';
+    if (userName === '[Server]') {
+      nameElement.style.color = 'yellow';
+    } else {
+      nameElement.style.color = 'aquamarine';
+    }
     return nameElement;
   }
 
   private createDateElement(date: Date): HTMLDivElement {
     const dateElement = document.createElement('div');
-    dateElement.textContent = this.formatDate(date);
+    dateElement.textContent = formatDate(date);
     dateElement.style.padding = '5px';
     dateElement.style.color = 'white';
     return dateElement;
@@ -346,44 +388,34 @@ export class LobbyScene extends Scene {
     return messageElement;
   }
 
-  private formatDate(date: Date): string {
-    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
-  }
-
   private createChatContainer(chat: IChat): HTMLDivElement {
-    const mainContainer = this.createMainContainer(chat);
+    const mainContainer = this.createMainContainer();
     const infoContainer = this.createInfoContainer();
-    const nameElement = this.createMessageUserNameElement('Server');
-    // const nameElement = this.createNameElement(chat.userName);
+    const nameElement = this.createMessageUserNameElement(chat.userName);
     const dateElement = this.createDateElement(chat.date);
     infoContainer.appendChild(nameElement);
     infoContainer.appendChild(dateElement);
-    // const messageElement = this.createMessageElement(chat.message);
-    const messageElement = this.createMessageElement(
-      'Bem vindo, - User1! Se já existir um jogo em aberto você pode entrar e ver a partida, caso contrário você pode criar sua sala para que outros jogadores possam entrar.'
-    );
+    const messageElement = this.createMessageElement(chat.message);
     mainContainer.appendChild(infoContainer);
     mainContainer.appendChild(messageElement);
     return mainContainer;
   }
 
-  private generateMessageList(count: number): void {
-    this.messageList = Array.from({ length: count }, (_, index) => ({
-      userName: `User${index + 1}`,
+  private generateMessageList(userName: string, message: string): void {
+    this.messageList.push({
+      userName,
       date: new Date(),
-      message: `Message ${index + 1}`,
-    }));
+      message,
+    });
   }
 
-  private addMoreMessages(): void {
-    const additionalMessagesCount = 50;
-    const newMessageCount = this.messageList.length + additionalMessagesCount;
-    this.generateMessageList(newMessageCount);
+  private addMessage(userName: string, message: string): void {
+    this.generateMessageList(userName, message);
     this.updateMessageListDisplay();
   }
 
-  private createInputMessageGraphics(): Phaser.GameObjects.Graphics {
-    const containerWidth = this.cameras.main.width * 0.9;
+  private createMessageInputGraphics(): Phaser.GameObjects.Graphics {
+    const containerWidth = this.cameras.main.width * 0.92;
     const containerHeight = this.cameras.main.height * 0.05;
     const positionX = 0;
     const positionY = this.cameras.main.height - this.cameras.main.height * 0.298;
@@ -393,5 +425,58 @@ export class LobbyScene extends Scene {
     graphics.lineStyle(3, 0xe5d16a, 1);
     graphics.strokeRect(positionX, positionY, containerWidth, containerHeight);
     return graphics;
+  }
+
+  private createMessageInput(): void {
+    const positionX = this.cameras.main.width - 995;
+    const positionY = this.cameras.main.height - this.cameras.main.height * 0.182;
+    this.messageInput = this.add.dom(
+      positionX,
+      positionY,
+      'input',
+      `
+        width: 1740px;
+        padding: 10px;
+        font-size: 20px;
+        border: none;
+        border: 3px solid black;
+        background-color: rgba(255, 255, 255, 1);
+        outline: none;
+        color: black;
+        font-family: 'ArianHeavy';
+      `
+    );
+    this.messageInput.node.setAttribute('type', 'text');
+    this.messageInput.node.setAttribute('placeholder', 'Digite sua mensagem...');
+    this.messageInput.addListener('input');
+  }
+
+  private createEnterButton(containerWidth: number, containerHeight: number): void {
+    const closeButton = this.add
+      .image(containerWidth + 47, containerHeight + 110, ImageKeyEnum.EnterIcon)
+      .setOrigin(1, 0)
+      .setScale(0.1)
+      .setFlipX(true)
+      .setFlipY(true);
+    closeButton.setInteractive();
+    closeButton.on(Phaser.Input.Events.POINTER_DOWN, () => {
+      this.handleAddMessage();
+    });
+  }
+
+  private createHostButton(containerHeight: number): void {
+    const buttonComponent = new ButtonComponent(this);
+    const button = buttonComponent.createButton(42, containerHeight + 200, 'Criar sala');
+    button.on(Phaser.Input.Events.POINTER_DOWN, () => {
+      console.log('host');
+    });
+  }
+
+  private createJoinButton(containerHeight: number): void {
+    const buttonComponent = new ButtonComponent(this);
+    const button = buttonComponent.createButton(300, containerHeight + 200, 'Entrar em sala');
+    button.on(Phaser.Input.Events.POINTER_DOWN, () => {
+      console.log('join');
+    });
   }
 }

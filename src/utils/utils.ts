@@ -7,3 +7,13 @@ export function isValidName(name: string): boolean {
   const regex = /^[a-zA-Z0-9]*$/;
   return regex.test(name);
 }
+
+export function formatDate(date: Date) {
+  return date.toLocaleString('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}

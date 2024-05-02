@@ -25,6 +25,7 @@ export class PreloaderScene extends Scene {
     this.load.image(ImageKeyEnum.Loading, 'assets/images/loading.png');
     this.load.image(ImageKeyEnum.LobbyBg, 'assets/images/lobby_bg.jpg');
     this.load.image(ImageKeyEnum.StarIcon, 'assets/images/star.png');
+    this.load.image(ImageKeyEnum.EnterIcon, 'assets/images/enter.png');
   }
 
   create(): void {

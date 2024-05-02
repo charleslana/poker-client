@@ -5,4 +5,5 @@ export enum ImageKeyEnum {
   Loading = 'Loading',
   LobbyBg = 'LobbyBg',
   StarIcon = 'StarIcon',
+  EnterIcon = 'EnterIcon',
 }
