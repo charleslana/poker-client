@@ -2,11 +2,11 @@ import * as Phaser from 'phaser';
 import AuthService from '@/service/AuthService';
 import UserService from '@/service/UserService';
 import { ButtonComponent } from '@/components/ButtonComponent';
-import { ChangeNameDialogComponent } from '@/components/ChangeNameDialogComponent';
+import { ChangeNameDialog } from './ChangeNameDialog';
 import { ImageKeyEnum } from '@/enum/ImageKeyEnum';
 import { isAuthenticated, saveAccessToken } from '@/utils/localStorageUtils';
-import { LoginDialogComponent } from '@/components/LoginDialogComponent';
-import { RegisterDialogComponent } from '@/components/RegisterDialogComponent';
+import { LoginDialog } from './LoginDialog';
+import { RegisterDialog } from './RegisterDialog';
 import { Scene } from 'phaser';
 import { SceneKeyEnum } from '@/enum/SceneKeyEnum';
 
@@ -17,9 +17,9 @@ export class HomeScene extends Scene {
 
   private mainCenterX: number;
   private mainCenterY: number;
-  private registerDialogComponent: RegisterDialogComponent;
-  private loginDialogComponent: LoginDialogComponent;
-  private changeNameDialogComponent: ChangeNameDialogComponent;
+  private registerDialog: RegisterDialog;
+  private loginDialog: LoginDialog;
+  private changeNameDialog: ChangeNameDialog;
   private buttonComponent: ButtonComponent;
   private registerButton: Phaser.GameObjects.Container;
   private loginButton: Phaser.GameObjects.Container;
@@ -107,9 +107,9 @@ export class HomeScene extends Scene {
   }
 
   private showRegisterDialog(): void {
-    this.registerDialogComponent = new RegisterDialogComponent(this);
-    this.registerDialogComponent.on(
-      this.registerDialogComponent.event,
+    this.registerDialog = new RegisterDialog(this);
+    this.registerDialog.on(
+      this.registerDialog.event,
       (email: string, password: string) => this.auth(email, password),
       this
     );
@@ -126,8 +126,8 @@ export class HomeScene extends Scene {
   }
 
   private showLoginDialog(): void {
-    this.loginDialogComponent = new LoginDialogComponent(this);
-    this.loginDialogComponent.on(this.loginDialogComponent.event, this.getUserMe, this);
+    this.loginDialog = new LoginDialog(this);
+    this.loginDialog.on(this.loginDialog.event, this.getUserMe, this);
   }
 
   private async getUserMe(): Promise<void> {
@@ -182,13 +182,9 @@ export class HomeScene extends Scene {
   }
 
   private showChangeNameDialog(): void {
-    this.changeNameDialogComponent = new ChangeNameDialogComponent(this);
-    this.changeNameDialogComponent.on(this.changeNameDialogComponent.event, this.goToLobby, this);
-    this.changeNameDialogComponent.on(
-      this.changeNameDialogComponent.logoutEvent,
-      this.restart,
-      this
-    );
+    this.changeNameDialog = new ChangeNameDialog(this);
+    this.changeNameDialog.on(this.changeNameDialog.event, this.goToLobby, this);
+    this.changeNameDialog.on(this.changeNameDialog.logoutEvent, this.restart, this);
   }
 
   private goToLobby(): void {

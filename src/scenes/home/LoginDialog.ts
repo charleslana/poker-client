@@ -1,13 +1,13 @@
 import * as Phaser from 'phaser';
 import AuthService from '@/service/AuthService';
-import { ButtonComponent } from './ButtonComponent';
+import { ButtonComponent } from '@/components/ButtonComponent';
 import { ImageKeyEnum } from '@/enum/ImageKeyEnum';
-import { InputComponent } from './InputComponent';
+import { InputComponent } from '@/components/InputComponent';
 import { IResponse } from '@/interface/IResponse';
 import { isValidEmail } from '@/utils/utils';
 import { saveAccessToken } from '@/utils/localStorageUtils';
 
-export class LoginDialogComponent extends Phaser.GameObjects.Container {
+export class LoginDialog extends Phaser.GameObjects.Container {
   constructor(scene: Phaser.Scene) {
     super(scene);
     this.createDialog();

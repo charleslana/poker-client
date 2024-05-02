@@ -1,13 +1,13 @@
 import * as Phaser from 'phaser';
 import UserService from '@/service/UserService';
-import { ButtonComponent } from './ButtonComponent';
+import { ButtonComponent } from '@/components/ButtonComponent';
 import { ImageKeyEnum } from '@/enum/ImageKeyEnum';
-import { InputComponent } from './InputComponent';
+import { InputComponent } from '@/components/InputComponent';
 import { IResponse } from '@/interface/IResponse';
 import { isValidName } from '@/utils/utils';
 import { removeAccessToken } from '@/utils/localStorageUtils';
 
-export class ChangeNameDialogComponent extends Phaser.GameObjects.Container {
+export class ChangeNameDialog extends Phaser.GameObjects.Container {
   constructor(scene: Phaser.Scene) {
     super(scene);
     this.createDialog();
