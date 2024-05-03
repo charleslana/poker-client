@@ -46,6 +46,12 @@ export class MessageListContainer extends Phaser.GameObjects.Container {
     this.scene.input.keyboard?.off('keydown-ENTER');
   }
 
+  public showMessage(): void {
+    this.messageListDiv.setVisible(true);
+    this.messageInput.setVisible(true);
+    this.enableKeydownEnter();
+  }
+
   private create(): void {
     this.createMessageList();
     this.createMessageListDiv();
@@ -79,9 +85,12 @@ export class MessageListContainer extends Phaser.GameObjects.Container {
 
   private createMessageList(): void {
     this.addMessageFromServer();
+    this.enableKeydownEnter();
+  }
+
+  private enableKeydownEnter(): void {
     this.scene.input.keyboard!.on('keydown-ENTER', () => {
       this.handleAddMessage();
-      console.log('chamou');
     });
   }
 
@@ -241,7 +250,7 @@ export class MessageListContainer extends Phaser.GameObjects.Container {
       `
     );
     this.messageInput.node.setAttribute('type', 'text');
-    this.messageInput.node.setAttribute('placeholder', 'Digite sua mensagem...');
+    this.messageInput.node.setAttribute('placeholder', '');
     this.messageInput.addListener('input');
   }
 

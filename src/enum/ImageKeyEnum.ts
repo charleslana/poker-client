@@ -6,4 +6,6 @@ export enum ImageKeyEnum {
   LobbyBg = 'LobbyBg',
   StarIcon = 'StarIcon',
   EnterIcon = 'EnterIcon',
+  AcceptIcon = 'AcceptIcon',
+  DeleteIcon = 'DeleteIcon',
 }

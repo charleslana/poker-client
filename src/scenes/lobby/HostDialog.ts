@@ -13,17 +13,22 @@ export class HostDialog extends Phaser.GameObjects.Container {
   private overlay: Phaser.GameObjects.Rectangle;
   private modal: Phaser.GameObjects.Rectangle;
   private modalGraphics: Phaser.GameObjects.Graphics;
-  private modalCloseButton: Phaser.GameObjects.Image;
+  private acceptButton: Phaser.GameObjects.Image;
+  private deleteButton: Phaser.GameObjects.Image;
   private mainCenterX = this.scene.cameras.main.width / 2;
   private mainCenterY = this.scene.cameras.main.height / 2;
   private titleText: Phaser.GameObjects.Text;
+  private inputName: Phaser.GameObjects.DOMElement;
+  private inputValue: string;
 
   private createDialog(): void {
     this.createBlocker();
     this.createOverlay();
     this.createModal();
-    this.createCloseButton();
     this.createTitleText();
+    this.createInput();
+    this.createAcceptButton();
+    this.createDeleteButton();
   }
 
   private createBlocker(): void {
@@ -55,7 +60,7 @@ export class HostDialog extends Phaser.GameObjects.Container {
   }
 
   private createModal(): void {
-    this.modal = this.scene.add.rectangle(this.mainCenterX, this.mainCenterY, 750, 500);
+    this.modal = this.scene.add.rectangle(this.mainCenterX, this.mainCenterY + 200, 750, 300);
     this.modal.setOrigin(0.5);
     this.modal.setDepth(998);
     this.createModalGraphics();
@@ -66,32 +71,41 @@ export class HostDialog extends Phaser.GameObjects.Container {
     this.modalGraphics.fillGradientStyle(0x2084fe, 0x2084fe, 0x1931a4, 0x1931a4, 1);
     this.modalGraphics.fillRect(
       this.modal.displayOriginX + 210,
-      this.modal.displayOriginY + 40,
+      this.modal.displayOriginY + 100,
       750,
-      500
+      300
     );
     this.modalGraphics.lineStyle(5, 0x49a1f1, 1);
     this.modalGraphics.strokeRoundedRect(
       this.modal.displayOriginX + 210,
-      this.modal.displayOriginY + 40,
+      this.modal.displayOriginY + 100,
       750,
-      500,
+      300,
       10
     );
     this.modalGraphics.setDepth(998);
   }
 
-  private createCloseButton(): void {
-    this.modalCloseButton = this.scene.add
-      .image(
-        this.mainCenterX + this.modal.width / 2 - 30,
-        this.mainCenterY - this.modal.height / 2 - 20,
-        ImageKeyEnum.CloseIcon
-      )
+  private createAcceptButton(): void {
+    this.acceptButton = this.scene.add
+      .image(this.mainCenterX - 200, this.mainCenterY - 100, ImageKeyEnum.AcceptIcon)
+      .setScale(0.15)
       .setOrigin(0);
-    this.modalCloseButton.setDepth(999);
-    this.modalCloseButton.setInteractive({ cursor: 'pointer' });
-    this.modalCloseButton.on(Phaser.Input.Events.POINTER_DOWN, () => {
+    this.acceptButton.setDepth(999);
+    this.acceptButton.setInteractive({ cursor: 'pointer' });
+    this.acceptButton.on(Phaser.Input.Events.POINTER_DOWN, () => {
+      console.log('accept');
+    });
+  }
+
+  private createDeleteButton(): void {
+    this.deleteButton = this.scene.add
+      .image(this.mainCenterX + 130, this.mainCenterY - 100, ImageKeyEnum.DeleteIcon)
+      .setScale(0.15)
+      .setOrigin(0);
+    this.deleteButton.setDepth(999);
+    this.deleteButton.setInteractive({ cursor: 'pointer' });
+    this.deleteButton.on(Phaser.Input.Events.POINTER_DOWN, () => {
       this.closeModal();
     });
   }
@@ -99,7 +113,7 @@ export class HostDialog extends Phaser.GameObjects.Container {
   private createTitleText(): void {
     this.titleText = this.scene.add.text(
       this.mainCenterX,
-      this.mainCenterY - 200,
+      this.mainCenterY - 250,
       'Create Your Game Room',
       {
         fontFamily: 'ArianHeavy',
@@ -116,17 +130,48 @@ export class HostDialog extends Phaser.GameObjects.Container {
     this.titleText.setDepth(999);
   }
 
+  private createInput(): void {
+    const positionX = this.scene.cameras.main.width / 2;
+    const positionY = this.scene.cameras.main.height / 2 - 150;
+    this.inputName = this.scene.add.dom(
+      positionX,
+      positionY,
+      'input',
+      `
+        width: 450px;
+        padding: 10px;
+        font-size: 20px;
+        border: none;
+        border: 3px solid black;
+        background-color: rgba(255, 255, 255, 1);
+        outline: none;
+        color: black;
+        font-family: 'ArianHeavy';
+      `
+    );
+    this.inputName.node.setAttribute('type', 'text');
+    this.inputName.node.setAttribute('placeholder', '');
+    this.inputName.addListener('input');
+    this.inputName.on('input', (event: Event) => {
+      const inputValue = (event.target as HTMLInputElement).value;
+      this.inputValue = inputValue;
+      console.log(this.inputValue);
+    });
+  }
+
   private closeModal(): void {
+    this.emitEvent();
     this.blocker.destroy();
     this.overlay.destroy();
     this.modal.destroy();
     this.modalGraphics.destroy();
-    this.modalCloseButton.destroy();
     this.titleText.destroy();
+    this.inputName.destroy();
+    this.acceptButton.destroy();
+    this.deleteButton.destroy();
   }
 
-  // private emitEvent(): void {
-  //   this.emit(this.event);
-  //   this.closeModal();
-  // }
+  private emitEvent(): void {
+    this.emit(this.event);
+  }
 }

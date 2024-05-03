@@ -14,6 +14,7 @@ export class LobbyScene extends Scene {
   }
 
   private messageListContainer: MessageListContainer;
+  private userListContainer: UserListContainer;
 
   create(): void {
     this.createBg();
@@ -81,15 +82,15 @@ export class LobbyScene extends Scene {
     container.setPosition(45, 100);
     const boxGraphics = this.createBoxGraphics(containerWidth, containerHeight);
     const headerGraphics = this.createHeaderGraphics(containerWidth);
-    const userListContainer = new UserListContainer(this);
+    this.userListContainer = new UserListContainer(this);
     this.messageListContainer = new MessageListContainer(this);
     this.createHostButton(containerHeight);
     this.createJoinButton(containerHeight);
     container.add([
       boxGraphics,
       headerGraphics,
-      userListContainer.createUserListGraphics(),
-      userListContainer.userListDiv,
+      this.userListContainer.createUserListGraphics(),
+      this.userListContainer.userListDiv,
       this.messageListContainer.createMessageGraphics(),
       this.messageListContainer.messageListDiv,
       this.messageListContainer.createMessageInputGraphics(),
@@ -123,10 +124,16 @@ export class LobbyScene extends Scene {
     const buttonComponent = new ButtonComponent(this);
     const button = buttonComponent.createButton(42, containerHeight + 200, 'Criar sala');
     button.on(Phaser.Input.Events.POINTER_DOWN, () => {
-      console.log('host');
-      new HostDialog(this);
+      const hostDialog = new HostDialog(this);
+      hostDialog.on(hostDialog.event, this.showLobby, this);
       this.messageListContainer.hideMessage();
+      this.userListContainer.hideUser();
     });
+  }
+
+  private showLobby(): void {
+    this.messageListContainer.showMessage();
+    this.userListContainer.showUser();
   }
 
   private createJoinButton(containerHeight: number): void {

@@ -135,7 +135,7 @@ export class ChangeNameDialog extends Phaser.GameObjects.Container {
     this.inputName = this.inputComponent.createInput(this.mainCenterX, this.mainCenterY - 30);
     this.inputName.on('input', (event: Event) => {
       const inputValue = (event.target as HTMLInputElement).value;
-      this.nameValue = inputValue;
+      this.nameValue = inputValue.trim();
     });
   }
 
@@ -182,6 +182,10 @@ export class ChangeNameDialog extends Phaser.GameObjects.Container {
       this.errorMessage.setText(
         'Nome inválido, ele deve conter apenas letras sem acentos e números'
       );
+      return;
+    }
+    if (this.nameValue.length < 3 || this.nameValue.length > 15) {
+      this.errorMessage.setText('O nome deve conter entre 3 a 15 caracteres');
       return;
     }
     this.disableButton();

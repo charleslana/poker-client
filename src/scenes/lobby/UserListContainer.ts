@@ -22,6 +22,14 @@ export class UserListContainer extends Phaser.GameObjects.Container {
     return graphics;
   }
 
+  public hideUser(): void {
+    this.userListDiv.setVisible(false);
+  }
+
+  public showUser(): void {
+    this.userListDiv.setVisible(true);
+  }
+
   private create(): void {
     this.createUserList();
     this.createUserListDiv();
