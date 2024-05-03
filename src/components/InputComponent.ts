@@ -9,7 +9,7 @@ export class InputComponent extends Phaser.GameObjects.Container {
     positionX: number,
     positionY: number,
     isPassword?: boolean,
-    placeholder = 'Preencha'
+    placeholder = ''
   ): Phaser.GameObjects.DOMElement {
     const input = this.scene.add.dom(
       positionX,

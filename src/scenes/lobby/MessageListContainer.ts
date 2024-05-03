@@ -40,6 +40,12 @@ export class MessageListContainer extends Phaser.GameObjects.Container {
     return graphics;
   }
 
+  public hideMessage(): void {
+    this.messageListDiv.setVisible(false);
+    this.messageInput.setVisible(false);
+    this.scene.input.keyboard?.off('keydown-ENTER');
+  }
+
   private create(): void {
     this.createMessageList();
     this.createMessageListDiv();
@@ -75,6 +81,7 @@ export class MessageListContainer extends Phaser.GameObjects.Container {
     this.addMessageFromServer();
     this.scene.input.keyboard!.on('keydown-ENTER', () => {
       this.handleAddMessage();
+      console.log('chamou');
     });
   }
 

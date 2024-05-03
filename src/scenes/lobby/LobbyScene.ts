@@ -1,5 +1,6 @@
 import * as Phaser from 'phaser';
 import { ButtonComponent } from '@/components/ButtonComponent';
+import { HostDialog } from './HostDialog';
 import { ImageKeyEnum } from '@/enum/ImageKeyEnum';
 import { MessageListContainer } from './MessageListContainer';
 import { removeAccessToken } from '@/utils/localStorageUtils';
@@ -11,6 +12,8 @@ export class LobbyScene extends Scene {
   constructor() {
     super(SceneKeyEnum.LobbyScene);
   }
+
+  private messageListContainer: MessageListContainer;
 
   create(): void {
     this.createBg();
@@ -79,7 +82,7 @@ export class LobbyScene extends Scene {
     const boxGraphics = this.createBoxGraphics(containerWidth, containerHeight);
     const headerGraphics = this.createHeaderGraphics(containerWidth);
     const userListContainer = new UserListContainer(this);
-    const messageListContainer = new MessageListContainer(this);
+    this.messageListContainer = new MessageListContainer(this);
     this.createHostButton(containerHeight);
     this.createJoinButton(containerHeight);
     container.add([
@@ -87,9 +90,9 @@ export class LobbyScene extends Scene {
       headerGraphics,
       userListContainer.createUserListGraphics(),
       userListContainer.userListDiv,
-      messageListContainer.createMessageGraphics(),
-      messageListContainer.messageListDiv,
-      messageListContainer.createMessageInputGraphics(),
+      this.messageListContainer.createMessageGraphics(),
+      this.messageListContainer.messageListDiv,
+      this.messageListContainer.createMessageInputGraphics(),
     ]);
   }
 
@@ -121,6 +124,8 @@ export class LobbyScene extends Scene {
     const button = buttonComponent.createButton(42, containerHeight + 200, 'Criar sala');
     button.on(Phaser.Input.Events.POINTER_DOWN, () => {
       console.log('host');
+      new HostDialog(this);
+      this.messageListContainer.hideMessage();
     });
   }
 

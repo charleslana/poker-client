@@ -122,8 +122,6 @@ export class RegisterDialog extends Phaser.GameObjects.Container {
       fontSize: '24px',
       color: '#ffffff',
       align: 'center',
-      stroke: '#000000',
-      strokeThickness: 2,
       wordWrap: {
         width: 480,
         useAdvancedWrap: true,
@@ -139,8 +137,6 @@ export class RegisterDialog extends Phaser.GameObjects.Container {
         fontFamily: 'ArianHeavy',
         fontSize: '24px',
         color: '#ffffff',
-        stroke: '#000000',
-        strokeThickness: 2,
         align: 'center',
       })
       .setOrigin(0.5)
@@ -161,8 +157,6 @@ export class RegisterDialog extends Phaser.GameObjects.Container {
         fontFamily: 'ArianHeavy',
         fontSize: '24px',
         color: '#ffffff',
-        stroke: '#000000',
-        strokeThickness: 2,
         align: 'center',
       })
       .setOrigin(0.5)
@@ -195,8 +189,6 @@ export class RegisterDialog extends Phaser.GameObjects.Container {
         fontFamily: 'ArianHeavy',
         fontSize: '18px',
         color: '#ff0000',
-        stroke: '#000000',
-        strokeThickness: 2,
         align: 'center',
       })
       .setOrigin(0.5)
