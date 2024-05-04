@@ -2,6 +2,8 @@ import * as Phaser from 'phaser';
 import { formatDate } from '@/utils/utils';
 import { IChat } from '@/interface/IChat';
 import { ImageKeyEnum } from '@/enum/ImageKeyEnum';
+import { Socket } from 'socket.io-client';
+import { SocketSingleton } from '@/config/SocketSingleton';
 
 export class MessageListContainer extends Phaser.GameObjects.Container {
   constructor(scene: Phaser.Scene) {
@@ -13,6 +15,7 @@ export class MessageListContainer extends Phaser.GameObjects.Container {
   public messageListDiv: Phaser.GameObjects.DOMElement;
 
   private messageInput: Phaser.GameObjects.DOMElement;
+  private socket: Socket;
 
   public createMessageGraphics(): Phaser.GameObjects.Graphics {
     const containerWidth = this.scene.cameras.main.width * 0.7;
@@ -52,21 +55,25 @@ export class MessageListContainer extends Phaser.GameObjects.Container {
     this.enableKeydownEnter();
   }
 
-  public addMessageFromServer(): void {
+  public addMessageFromServer(userName: string): void {
     this.messageList.push({
-      userName: '[Server]',
+      user: {
+        id: '0',
+        name: '[Server]',
+      },
       date: new Date(),
-      message:
-        'Welcome, User1! If any games are in session, you can join and watch. Or, you can host your own game for others to join.',
+      message: `Welcome, ${userName}! If any games are in session, you can join and watch. Or, you can host your own game for others to join.`,
     });
     this.updateMessageListDisplay();
   }
 
   private create(): void {
+    this.socket = SocketSingleton.getInstance();
     this.createMessageList();
     this.createMessageListDiv();
     this.createMessageInput();
     this.createEnterButton();
+    this.handleMessages();
   }
 
   private createMessageListDiv(): void {
@@ -105,23 +112,24 @@ export class MessageListContainer extends Phaser.GameObjects.Container {
 
   private handleAddMessage(): void {
     const input = this.messageInput.node as HTMLInputElement;
-    if (input.value.trim() !== '') {
-      this.addMessage('User1', input.value.trim());
+    if (input.value.trim() !== '' && input.value.trim().length <= 200) {
+      this.socket.emit('sendMessage', input.value.trim());
+      // this.addMessage('User1', input.value.trim());
       input.value = '';
-      this.messageListDiv.node.scrollTop = this.messageListDiv.node.scrollHeight;
+      this.scrollToBottom();
     }
   }
 
-  private addMessage(userName: string, message: string): void {
-    this.generateMessageList(userName, message);
-    this.updateMessageListDisplay();
+  private scrollToBottom(): void {
+    this.messageListDiv.node.scrollTop = this.messageListDiv.node.scrollHeight;
   }
 
-  private generateMessageList(userName: string, message: string): void {
-    this.messageList.push({
-      userName,
-      date: new Date(),
-      message,
+  private handleMessages(): void {
+    this.socket.on('lastMessage', (chat: IChat) => {
+      console.log('Obtendo última mensagem:', chat);
+      this.messageList.push(chat);
+      this.updateMessageListDisplay();
+      this.scrollToBottom();
     });
   }
 
@@ -143,7 +151,7 @@ export class MessageListContainer extends Phaser.GameObjects.Container {
     messageContainer.style.flexDirection = 'row';
     messageContainer.style.width = '100%';
     messageContainer.style.marginBottom = '5px';
-    if (chat.userName === '[Server]') {
+    if (chat.user.name === '[Server]') {
       const imageElement = this.createImageElement();
       messageContainer.appendChild(imageElement);
     } else {
@@ -178,8 +186,8 @@ export class MessageListContainer extends Phaser.GameObjects.Container {
   private createChatContainer(chat: IChat): HTMLDivElement {
     const mainContainer = this.createMainContainer();
     const infoContainer = this.createInfoContainer();
-    const nameElement = this.createMessageUserNameElement(chat.userName);
-    const dateElement = this.createDateElement(chat.date);
+    const nameElement = this.createMessageUserNameElement(chat.user.name);
+    const dateElement = this.createDateElement(new Date(chat.date));
     infoContainer.appendChild(nameElement);
     infoContainer.appendChild(dateElement);
     const messageElement = this.createMessageElement(chat.message);

@@ -1,5 +1,7 @@
+import { IPlayer } from './IPlayer';
+
 export interface IChat {
-  userName: string;
+  user: IPlayer;
   date: Date;
   message: string;
 }

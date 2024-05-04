@@ -8,7 +8,7 @@ export function isValidName(name: string): boolean {
   return regex.test(name);
 }
 
-export function formatDate(date: Date) {
+export function formatDate(date: Date): string {
   return date.toLocaleString('pt-BR', {
     day: '2-digit',
     month: '2-digit',

@@ -2,13 +2,14 @@ import * as Phaser from 'phaser';
 import { ButtonComponent } from '@/components/ButtonComponent';
 import { HostDialog } from './HostDialog';
 import { ImageKeyEnum } from '@/enum/ImageKeyEnum';
-import { io, Socket } from 'socket.io-client';
 import { IPlayer } from '@/interface/IPlayer';
 import { JoinDialog } from './JoinDialog';
 import { MessageListContainer } from './MessageListContainer';
 import { removeAccessToken } from '@/utils/localStorageUtils';
 import { Scene } from 'phaser';
 import { SceneKeyEnum } from '@/enum/SceneKeyEnum';
+import { Socket } from 'socket.io-client';
+import { SocketSingleton } from '@/config/SocketSingleton';
 import { UserListContainer } from './UserListContainer';
 
 export class LobbyScene extends Scene {
@@ -29,10 +30,10 @@ export class LobbyScene extends Scene {
   }
 
   private handleSocket(): void {
-    this.socket = io(process.env.API_URL as string);
+    this.socket = SocketSingleton.getInstance();
     this.socket.on('connect', () => {
       console.log('Conectado ao servidor Socket.io');
-      this.messageListContainer.addMessageFromServer();
+      this.messageListContainer.addMessageFromServer(this.socket.id as string);
     });
     this.socket.on('disconnect', () => {
       console.log('Desconectado do servidor Socket.io');
