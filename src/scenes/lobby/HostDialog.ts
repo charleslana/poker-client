@@ -13,12 +13,12 @@ export class HostDialog extends Phaser.GameObjects.Container {
   private overlay: Phaser.GameObjects.Rectangle;
   private modal: Phaser.GameObjects.Rectangle;
   private modalGraphics: Phaser.GameObjects.Graphics;
-  private acceptButton: Phaser.GameObjects.Image;
-  private deleteButton: Phaser.GameObjects.Image;
   private mainCenterX = this.scene.cameras.main.width / 2;
   private mainCenterY = this.scene.cameras.main.height / 2;
   private titleText: Phaser.GameObjects.Text;
   private inputName: Phaser.GameObjects.DOMElement;
+  private acceptButton: Phaser.GameObjects.Image;
+  private deleteButton: Phaser.GameObjects.Image;
   private inputValue: string;
 
   private createDialog(): void {
@@ -86,30 +86,6 @@ export class HostDialog extends Phaser.GameObjects.Container {
     this.modalGraphics.setDepth(998);
   }
 
-  private createAcceptButton(): void {
-    this.acceptButton = this.scene.add
-      .image(this.mainCenterX - 200, this.mainCenterY - 100, ImageKeyEnum.AcceptIcon)
-      .setScale(0.15)
-      .setOrigin(0);
-    this.acceptButton.setDepth(999);
-    this.acceptButton.setInteractive({ cursor: 'pointer' });
-    this.acceptButton.on(Phaser.Input.Events.POINTER_DOWN, () => {
-      console.log('accept');
-    });
-  }
-
-  private createDeleteButton(): void {
-    this.deleteButton = this.scene.add
-      .image(this.mainCenterX + 130, this.mainCenterY - 100, ImageKeyEnum.DeleteIcon)
-      .setScale(0.15)
-      .setOrigin(0);
-    this.deleteButton.setDepth(999);
-    this.deleteButton.setInteractive({ cursor: 'pointer' });
-    this.deleteButton.on(Phaser.Input.Events.POINTER_DOWN, () => {
-      this.closeModal();
-    });
-  }
-
   private createTitleText(): void {
     this.titleText = this.scene.add.text(
       this.mainCenterX,
@@ -156,6 +132,30 @@ export class HostDialog extends Phaser.GameObjects.Container {
       const inputValue = (event.target as HTMLInputElement).value;
       this.inputValue = inputValue;
       console.log(this.inputValue);
+    });
+  }
+
+  private createAcceptButton(): void {
+    this.acceptButton = this.scene.add
+      .image(this.mainCenterX - 200, this.mainCenterY - 100, ImageKeyEnum.AcceptIcon)
+      .setScale(0.15)
+      .setOrigin(0);
+    this.acceptButton.setDepth(999);
+    this.acceptButton.setInteractive({ cursor: 'pointer' });
+    this.acceptButton.on(Phaser.Input.Events.POINTER_DOWN, () => {
+      console.log('accept');
+    });
+  }
+
+  private createDeleteButton(): void {
+    this.deleteButton = this.scene.add
+      .image(this.mainCenterX + 130, this.mainCenterY - 100, ImageKeyEnum.DeleteIcon)
+      .setScale(0.15)
+      .setOrigin(0);
+    this.deleteButton.setDepth(999);
+    this.deleteButton.setInteractive({ cursor: 'pointer' });
+    this.deleteButton.on(Phaser.Input.Events.POINTER_DOWN, () => {
+      this.closeModal();
     });
   }
 

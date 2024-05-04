@@ -7,6 +7,7 @@ import { removeAccessToken } from '@/utils/localStorageUtils';
 import { Scene } from 'phaser';
 import { SceneKeyEnum } from '@/enum/SceneKeyEnum';
 import { UserListContainer } from './UserListContainer';
+import { JoinDialog } from './JoinDialog';
 
 export class LobbyScene extends Scene {
   constructor() {
@@ -122,7 +123,7 @@ export class LobbyScene extends Scene {
 
   private createHostButton(containerHeight: number): void {
     const buttonComponent = new ButtonComponent(this);
-    const button = buttonComponent.createButton(42, containerHeight + 200, 'Criar sala');
+    const button = buttonComponent.createButton(42, containerHeight + 200, 'Host');
     button.on(Phaser.Input.Events.POINTER_DOWN, () => {
       const hostDialog = new HostDialog(this);
       hostDialog.on(hostDialog.event, this.showLobby, this);
@@ -138,9 +139,12 @@ export class LobbyScene extends Scene {
 
   private createJoinButton(containerHeight: number): void {
     const buttonComponent = new ButtonComponent(this);
-    const button = buttonComponent.createButton(300, containerHeight + 200, 'Entrar em sala');
+    const button = buttonComponent.createButton(300, containerHeight + 200, 'Join');
     button.on(Phaser.Input.Events.POINTER_DOWN, () => {
-      console.log('join');
+      const joinDialog = new JoinDialog(this);
+      joinDialog.on(joinDialog.event, this.showLobby, this);
+      this.messageListContainer.hideMessage();
+      this.userListContainer.hideUser();
     });
   }
 }

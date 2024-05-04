@@ -99,7 +99,7 @@ export class MessageListContainer extends Phaser.GameObjects.Container {
       userName: '[Server]',
       date: new Date(),
       message:
-        'Bem vindo, - User1! Se já existir um jogo em aberto você pode entrar e ver a partida, caso contrário você pode criar sua sala para que outros jogadores possam entrar.',
+        'Welcome, User1! If any games are in session, you can join and watch. Or, you can host your own game for others to join.',
     });
   }
 
