@@ -52,6 +52,16 @@ export class MessageListContainer extends Phaser.GameObjects.Container {
     this.enableKeydownEnter();
   }
 
+  public addMessageFromServer(): void {
+    this.messageList.push({
+      userName: '[Server]',
+      date: new Date(),
+      message:
+        'Welcome, User1! If any games are in session, you can join and watch. Or, you can host your own game for others to join.',
+    });
+    this.updateMessageListDisplay();
+  }
+
   private create(): void {
     this.createMessageList();
     this.createMessageListDiv();
@@ -84,22 +94,12 @@ export class MessageListContainer extends Phaser.GameObjects.Container {
   }
 
   private createMessageList(): void {
-    this.addMessageFromServer();
     this.enableKeydownEnter();
   }
 
   private enableKeydownEnter(): void {
     this.scene.input.keyboard!.on('keydown-ENTER', () => {
       this.handleAddMessage();
-    });
-  }
-
-  private addMessageFromServer(): void {
-    this.messageList.push({
-      userName: '[Server]',
-      date: new Date(),
-      message:
-        'Welcome, User1! If any games are in session, you can join and watch. Or, you can host your own game for others to join.',
     });
   }
 

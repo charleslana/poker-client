@@ -2,12 +2,14 @@ import * as Phaser from 'phaser';
 import { ButtonComponent } from '@/components/ButtonComponent';
 import { HostDialog } from './HostDialog';
 import { ImageKeyEnum } from '@/enum/ImageKeyEnum';
+import { io, Socket } from 'socket.io-client';
+import { IPlayer } from '@/interface/IPlayer';
+import { JoinDialog } from './JoinDialog';
 import { MessageListContainer } from './MessageListContainer';
 import { removeAccessToken } from '@/utils/localStorageUtils';
 import { Scene } from 'phaser';
 import { SceneKeyEnum } from '@/enum/SceneKeyEnum';
 import { UserListContainer } from './UserListContainer';
-import { JoinDialog } from './JoinDialog';
 
 export class LobbyScene extends Scene {
   constructor() {
@@ -16,11 +18,33 @@ export class LobbyScene extends Scene {
 
   private messageListContainer: MessageListContainer;
   private userListContainer: UserListContainer;
+  private socket: Socket;
 
   create(): void {
     this.createBg();
     this.createHeader();
     this.createMainSection();
+    this.handleSocket();
+    this.handleUsersConnected();
+  }
+
+  private handleSocket(): void {
+    this.socket = io(process.env.API_URL as string);
+    this.socket.on('connect', () => {
+      console.log('Conectado ao servidor Socket.io');
+      this.messageListContainer.addMessageFromServer();
+    });
+    this.socket.on('disconnect', () => {
+      console.log('Desconectado do servidor Socket.io');
+    });
+  }
+
+  private handleUsersConnected(): void {
+    this.socket.on('allUsers', (users: IPlayer[]) => {
+      console.log('Lista de todos os usuários conectados:', users);
+      this.userListContainer.changeUserList(users);
+    });
+    this.socket.emit('getAllUsers');
   }
 
   private createHeader(): void {
@@ -71,6 +95,7 @@ export class LobbyScene extends Scene {
   }
 
   private logout(): void {
+    this.socket.disconnect();
     removeAccessToken();
     this.scene.start(SceneKeyEnum.HomeScene);
   }

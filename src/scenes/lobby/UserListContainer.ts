@@ -1,13 +1,15 @@
 import * as Phaser from 'phaser';
+import { IPlayer } from '@/interface/IPlayer';
 
 export class UserListContainer extends Phaser.GameObjects.Container {
   constructor(scene: Phaser.Scene) {
     super(scene);
-    this.create();
+    this.createUserListDiv();
   }
 
-  public userList: string[] = [];
   public userListDiv: Phaser.GameObjects.DOMElement;
+
+  private userList: IPlayer[] = [];
 
   public createUserListGraphics(): Phaser.GameObjects.Graphics {
     const containerWidth = this.scene.cameras.main.width * 0.25;
@@ -30,9 +32,9 @@ export class UserListContainer extends Phaser.GameObjects.Container {
     this.userListDiv.setVisible(true);
   }
 
-  private create(): void {
-    this.createUserList();
-    this.createUserListDiv();
+  public changeUserList(users: IPlayer[]): void {
+    this.userList = users;
+    this.updateUserListDisplay();
   }
 
   private createUserListDiv(): void {
@@ -58,28 +60,10 @@ export class UserListContainer extends Phaser.GameObjects.Container {
     this.updateUserListDisplay();
   }
 
-  private createUserList(): void {
-    this.generateUserList(50);
-    this.scene.input.keyboard!.on('keydown-ONE', () => {
-      this.addMoreUsers();
-    });
-  }
-
-  private generateUserList(count: number): void {
-    this.userList = Array.from({ length: count }, (_, index) => `User${index + 1}`);
-  }
-
-  private addMoreUsers(): void {
-    const additionalUsersCount = 50;
-    const newUserCount = this.userList.length + additionalUsersCount;
-    this.generateUserList(newUserCount);
-    this.updateUserListDisplay();
-  }
-
   private updateUserListDisplay(): void {
     this.clearUserList();
     this.userList.forEach((user) => {
-      const userContainer = this.createUserContainer(user);
+      const userContainer = this.createUserContainer(user.name);
       this.userListDiv.node.appendChild(userContainer);
     });
   }

@@ -140,6 +140,7 @@ export class JoinDialog extends Phaser.GameObjects.Container {
         name: `Room ${index + 1}`,
         players: [
           {
+            id: `Id${index}`,
             name: `User${index + 1}`,
           },
         ],
