@@ -114,7 +114,6 @@ export class MessageListContainer extends Phaser.GameObjects.Container {
     const input = this.messageInput.node as HTMLInputElement;
     if (input.value.trim() !== '' && input.value.trim().length <= 200) {
       this.socket.emit('sendMessage', input.value.trim());
-      // this.addMessage('User1', input.value.trim());
       input.value = '';
       this.scrollToBottom();
     }
@@ -137,7 +136,7 @@ export class MessageListContainer extends Phaser.GameObjects.Container {
     this.clearMessageList();
     this.messageList.forEach((chat) => {
       const messageContainer = this.createMessageContainer(chat);
-      this.messageListDiv.node.appendChild(messageContainer);
+      this.messageListDiv?.node.appendChild(messageContainer);
     });
   }
 

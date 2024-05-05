@@ -1,5 +1,8 @@
 import * as Phaser from 'phaser';
 import { ImageKeyEnum } from '@/enum/ImageKeyEnum';
+import { SceneKeyEnum } from '@/enum/SceneKeyEnum';
+import { Socket } from 'socket.io-client';
+import { SocketSingleton } from '@/config/SocketSingleton';
 
 export class HostDialog extends Phaser.GameObjects.Container {
   constructor(scene: Phaser.Scene) {
@@ -19,7 +22,9 @@ export class HostDialog extends Phaser.GameObjects.Container {
   private inputName: Phaser.GameObjects.DOMElement;
   private acceptButton: Phaser.GameObjects.Image;
   private deleteButton: Phaser.GameObjects.Image;
-  private inputValue: string;
+  private inputValue: string | undefined;
+  private socket: Socket;
+  private errorMessage: Phaser.GameObjects.Text;
 
   private createDialog(): void {
     this.createBlocker();
@@ -29,6 +34,7 @@ export class HostDialog extends Phaser.GameObjects.Container {
     this.createInput();
     this.createAcceptButton();
     this.createDeleteButton();
+    this.createErroMessage();
   }
 
   private createBlocker(): void {
@@ -130,8 +136,7 @@ export class HostDialog extends Phaser.GameObjects.Container {
     this.inputName.addListener('input');
     this.inputName.on('input', (event: Event) => {
       const inputValue = (event.target as HTMLInputElement).value;
-      this.inputValue = inputValue;
-      console.log(this.inputValue);
+      this.inputValue = inputValue.trim();
     });
   }
 
@@ -143,8 +148,38 @@ export class HostDialog extends Phaser.GameObjects.Container {
     this.acceptButton.setDepth(999);
     this.acceptButton.setInteractive({ cursor: 'pointer' });
     this.acceptButton.on(Phaser.Input.Events.POINTER_DOWN, () => {
-      console.log('accept');
+      this.handleCreateRoom();
     });
+  }
+
+  private handleCreateRoom(): void {
+    this.errorMessage.setText('');
+    if (!this.validateName()) {
+      this.errorMessage.setText(
+        'O nome da sala deve estar entre 1 a 15 caracteres, o nome deve conter apenas letras, números e espaço'
+      );
+      return;
+    }
+    this.socket = SocketSingleton.getInstance();
+    this.socket.emit('createRoom', this.inputValue);
+    this.socket.off('allUsers');
+    this.socket.off('lastMessage');
+    this.scene.scene.start(SceneKeyEnum.GameScene);
+  }
+
+  private validateName(): boolean {
+    const name = this.inputValue;
+    if (!name) {
+      return false;
+    }
+    if (name.length < 1 || name.length > 15) {
+      return false;
+    }
+    const regex = /^[a-zA-Z0-9\s]*$/;
+    if (!regex.test(name)) {
+      return false;
+    }
+    return true;
   }
 
   private createDeleteButton(): void {
@@ -159,6 +194,18 @@ export class HostDialog extends Phaser.GameObjects.Container {
     });
   }
 
+  private createErroMessage(): void {
+    this.errorMessage = this.scene.add
+      .text(this.mainCenterX, this.mainCenterY + 100, '', {
+        fontFamily: 'ArianHeavy',
+        fontSize: '18px',
+        color: '#ff0000',
+        align: 'center',
+      })
+      .setOrigin(0.5)
+      .setDepth(999);
+  }
+
   private closeModal(): void {
     this.emitEvent();
     this.blocker.destroy();
@@ -169,6 +216,7 @@ export class HostDialog extends Phaser.GameObjects.Container {
     this.inputName.destroy();
     this.acceptButton.destroy();
     this.deleteButton.destroy();
+    this.errorMessage.destroy();
   }
 
   private emitEvent(): void {

@@ -1,6 +1,8 @@
 import * as Phaser from 'phaser';
 import { ImageKeyEnum } from '@/enum/ImageKeyEnum';
 import { IRoom } from '@/interface/IRoom';
+import { Socket } from 'socket.io-client';
+import { SocketSingleton } from '@/config/SocketSingleton';
 
 export class JoinDialog extends Phaser.GameObjects.Container {
   constructor(scene: Phaser.Scene) {
@@ -18,19 +20,20 @@ export class JoinDialog extends Phaser.GameObjects.Container {
   private mainCenterY = this.scene.cameras.main.height / 2;
   private titleText: Phaser.GameObjects.Text;
   private containerDiv: Phaser.GameObjects.DOMElement;
-  private roomList: IRoom[];
+  private roomList: IRoom[] = [];
   private selectedRoomContainer: HTMLDivElement | null = null;
   private selectedRoom: IRoom;
   private acceptButton: Phaser.GameObjects.Image;
   private deleteButton: Phaser.GameObjects.Image;
+  private socket: Socket;
 
   private createDialog(): void {
-    this.generateRoomList(50);
     this.createBlocker();
     this.createOverlay();
     this.createModal();
     this.createTitleText();
     this.createContainerDiv();
+    this.handleGetRooms();
     this.createAcceptButton();
     this.createDeleteButton();
   }
@@ -134,18 +137,27 @@ export class JoinDialog extends Phaser.GameObjects.Container {
     this.containerDiv.node.appendChild(this.createListContainer());
   }
 
-  private generateRoomList(count: number): void {
-    this.roomList = Array.from({ length: count }, (_, index) => {
-      return {
-        name: `Room ${index + 1}`,
-        players: [
-          {
-            id: `Id${index}`,
-            name: `User${index + 1}`,
-          },
-        ],
-      };
+  private handleGetRooms(): void {
+    this.socket = SocketSingleton.getInstance();
+    this.socket.on('allRooms', (rooms: IRoom[]) => {
+      console.log('List all of rooms:', rooms);
+      this.changeRoomList(rooms);
     });
+    this.socket.emit('getAllRooms');
+  }
+
+  private changeRoomList(rooms: IRoom[]): void {
+    this.roomList = rooms;
+    this.updateRoomListDisplay();
+  }
+
+  private updateRoomListDisplay(): void {
+    this.clearRoomList();
+    this.containerDiv.node.appendChild(this.createListContainer());
+  }
+
+  private clearRoomList(): void {
+    this.containerDiv.node.innerHTML = '';
   }
 
   private createListContainer(): HTMLDivElement {
@@ -172,8 +184,8 @@ export class JoinDialog extends Phaser.GameObjects.Container {
     roomContainer.style.cursor = 'pointer';
     const roomName = this.createRoomName(room.name);
     const infoContainer = this.createInfoContainer();
-    const blinds = this.createBlinds(room.players.length);
-    const players = this.createPlayers(room.players.length);
+    const blinds = this.createBlinds(room.users.length);
+    const players = this.createPlayers(room.users.length);
     roomContainer.appendChild(roomName);
     infoContainer.appendChild(blinds);
     infoContainer.appendChild(players);
@@ -252,6 +264,7 @@ export class JoinDialog extends Phaser.GameObjects.Container {
     this.containerDiv.destroy();
     this.acceptButton.destroy();
     this.deleteButton.destroy();
+    this.socket.off('allRooms');
   }
 
   private emitEvent(): void {

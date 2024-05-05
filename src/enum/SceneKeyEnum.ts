@@ -3,4 +3,5 @@ export enum SceneKeyEnum {
   PreloaderScene = 'PreloaderScene',
   HomeScene = 'HomeScene',
   LobbyScene = 'LobbyScene',
+  GameScene = 'GameScene',
 }

@@ -2,7 +2,6 @@ import * as Phaser from 'phaser';
 import { ButtonComponent } from '@/components/ButtonComponent';
 import { HostDialog } from './HostDialog';
 import { ImageKeyEnum } from '@/enum/ImageKeyEnum';
-import { IPlayer } from '@/interface/IPlayer';
 import { JoinDialog } from './JoinDialog';
 import { MessageListContainer } from './MessageListContainer';
 import { removeAccessToken } from '@/utils/localStorageUtils';
@@ -26,7 +25,6 @@ export class LobbyScene extends Scene {
     this.createHeader();
     this.createMainSection();
     this.handleSocket();
-    this.handleUsersConnected();
   }
 
   private handleSocket(): void {
@@ -38,14 +36,6 @@ export class LobbyScene extends Scene {
     this.socket.on('disconnect', () => {
       console.log('Desconectado do servidor Socket.io');
     });
-  }
-
-  private handleUsersConnected(): void {
-    this.socket.on('allUsers', (users: IPlayer[]) => {
-      console.log('Lista de todos os usuários conectados:', users);
-      this.userListContainer.changeUserList(users);
-    });
-    this.socket.emit('getAllUsers');
   }
 
   private createHeader(): void {

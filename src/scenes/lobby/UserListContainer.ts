@@ -1,15 +1,19 @@
 import * as Phaser from 'phaser';
 import { IPlayer } from '@/interface/IPlayer';
+import { Socket } from 'socket.io-client';
+import { SocketSingleton } from '@/config/SocketSingleton';
 
 export class UserListContainer extends Phaser.GameObjects.Container {
   constructor(scene: Phaser.Scene) {
     super(scene);
     this.createUserListDiv();
+    this.handleUsersConnected();
   }
 
   public userListDiv: Phaser.GameObjects.DOMElement;
 
   private userList: IPlayer[] = [];
+  private socket: Socket;
 
   public createUserListGraphics(): Phaser.GameObjects.Graphics {
     const containerWidth = this.scene.cameras.main.width * 0.25;
@@ -32,7 +36,15 @@ export class UserListContainer extends Phaser.GameObjects.Container {
     this.userListDiv.setVisible(true);
   }
 
-  public changeUserList(users: IPlayer[]): void {
+  private handleUsersConnected(): void {
+    this.socket = SocketSingleton.getInstance();
+    this.socket.on('allUsers', (users: IPlayer[]) => {
+      console.log('Lista de todos os usuários conectados:', users);
+      this.changeUserList(users);
+    });
+  }
+
+  private changeUserList(users: IPlayer[]): void {
     this.userList = users;
     this.updateUserListDisplay();
   }

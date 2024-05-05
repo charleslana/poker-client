@@ -1,6 +1,7 @@
 import * as Phaser from 'phaser';
 import { BootScene } from './scenes/BootScene';
 import { Game, Types } from 'phaser';
+import { GameScene } from './scenes/game/GameScene';
 import { HomeScene } from './scenes/home/HomeScene';
 import { LobbyScene } from './scenes/lobby/LobbyScene';
 import { PreloaderScene } from './scenes/PreloaderScene';
@@ -24,7 +25,7 @@ const config: Types.Core.GameConfig = {
   dom: {
     createContainer: true,
   },
-  scene: [BootScene, PreloaderScene, HomeScene, LobbyScene],
+  scene: [BootScene, PreloaderScene, HomeScene, LobbyScene, GameScene],
 };
 
 export default new Game(config);
