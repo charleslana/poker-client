@@ -1,5 +1,6 @@
 import * as Phaser from 'phaser';
 import { ImageKeyEnum } from '@/enum/ImageKeyEnum';
+import { IRoom } from '@/interface/IRoom';
 import { SceneKeyEnum } from '@/enum/SceneKeyEnum';
 import { Socket } from 'socket.io-client';
 import { SocketSingleton } from '@/config/SocketSingleton';
@@ -162,9 +163,11 @@ export class HostDialog extends Phaser.GameObjects.Container {
     }
     this.socket = SocketSingleton.getInstance();
     this.socket.emit('createRoom', this.inputValue);
-    this.socket.off('allUsers');
-    this.socket.off('lastMessage');
-    this.scene.scene.start(SceneKeyEnum.GameScene);
+    this.socket.on('createRoomSuccess', (room: IRoom) => {
+      this.socket.off('allUsers');
+      this.socket.off('lastMessage');
+      this.scene.scene.start(SceneKeyEnum.GameScene, room);
+    });
   }
 
   private validateName(): boolean {

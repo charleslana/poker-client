@@ -173,7 +173,7 @@ export class ChangeNameDialog extends Phaser.GameObjects.Container {
   }
 
   private emitEvent(): void {
-    this.emit(this.event);
+    this.emit(this.event, this.nameValue);
   }
 
   private async changeName(): Promise<void> {

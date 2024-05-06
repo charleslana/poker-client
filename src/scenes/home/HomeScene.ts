@@ -3,12 +3,14 @@ import AuthService from '@/service/AuthService';
 import UserService from '@/service/UserService';
 import { ButtonComponent } from '@/components/ButtonComponent';
 import { ChangeNameDialog } from './ChangeNameDialog';
+import { IGetUser } from '@/interface/IUser';
 import { ImageKeyEnum } from '@/enum/ImageKeyEnum';
 import { isAuthenticated, saveAccessToken } from '@/utils/localStorageUtils';
 import { LoginDialog } from './LoginDialog';
 import { RegisterDialog } from './RegisterDialog';
 import { Scene } from 'phaser';
 import { SceneKeyEnum } from '@/enum/SceneKeyEnum';
+import { UserSingleton } from '@/config/UserSingleton';
 
 export class HomeScene extends Scene {
   constructor() {
@@ -136,10 +138,10 @@ export class HomeScene extends Scene {
     try {
       const getUserMe = await UserService.getMe();
       if (!getUserMe.name) {
-        this.showChangeNameDialog();
+        this.showChangeNameDialog(getUserMe);
         return;
       }
-      this.goToLobby();
+      this.goToLobby(getUserMe);
     } catch (error) {
       console.log(error);
       this.showRegisterLoginButton();
@@ -181,13 +183,18 @@ export class HomeScene extends Scene {
     this.loadingText.setOrigin(0.5);
   }
 
-  private showChangeNameDialog(): void {
+  private showChangeNameDialog(user: IGetUser): void {
     this.changeNameDialog = new ChangeNameDialog(this);
-    this.changeNameDialog.on(this.changeNameDialog.event, this.goToLobby, this);
+    this.changeNameDialog.on(
+      this.changeNameDialog.event,
+      (userName: string) => this.goToLobby({ ...user, name: userName }),
+      this
+    );
     this.changeNameDialog.on(this.changeNameDialog.logoutEvent, this.restart, this);
   }
 
-  private goToLobby(): void {
+  private goToLobby(user: IGetUser): void {
+    UserSingleton.setUser(user);
     this.scene.start(SceneKeyEnum.LobbyScene);
   }
 

@@ -1,6 +1,7 @@
 import * as Phaser from 'phaser';
 import { ImageKeyEnum } from '@/enum/ImageKeyEnum';
 import { IRoom } from '@/interface/IRoom';
+import { SceneKeyEnum } from '@/enum/SceneKeyEnum';
 import { Socket } from 'socket.io-client';
 import { SocketSingleton } from '@/config/SocketSingleton';
 
@@ -28,6 +29,7 @@ export class JoinDialog extends Phaser.GameObjects.Container {
   private socket: Socket;
 
   private createDialog(): void {
+    this.socket = SocketSingleton.getInstance();
     this.createBlocker();
     this.createOverlay();
     this.createModal();
@@ -138,7 +140,6 @@ export class JoinDialog extends Phaser.GameObjects.Container {
   }
 
   private handleGetRooms(): void {
-    this.socket = SocketSingleton.getInstance();
     this.socket.on('allRooms', (rooms: IRoom[]) => {
       console.log('List all of rooms:', rooms);
       this.changeRoomList(rooms);
@@ -170,7 +171,6 @@ export class JoinDialog extends Phaser.GameObjects.Container {
       roomContainer.addEventListener('click', () => {
         this.handleRoomContainerClick(roomContainer);
         this.selectedRoom = room;
-        console.log(this.selectedRoom);
       });
       mainContainer.appendChild(roomContainer);
     });
@@ -238,8 +238,20 @@ export class JoinDialog extends Phaser.GameObjects.Container {
     this.acceptButton.setDepth(999);
     this.acceptButton.setInteractive({ cursor: 'pointer' });
     this.acceptButton.on(Phaser.Input.Events.POINTER_DOWN, () => {
-      console.log('accept');
+      this.handleJoinRoom();
     });
+  }
+
+  private handleJoinRoom(): void {
+    if (this.selectedRoom) {
+      this.socket.on('joinRoomSuccess', (room: IRoom) => {
+        this.socket.off('allUsers');
+        this.socket.off('lastMessage');
+        this.socket.off('allRooms');
+        this.scene.scene.start(SceneKeyEnum.GameScene, room);
+      });
+      this.socket.emit('joinRoom', this.selectedRoom.id);
+    }
   }
 
   private createDeleteButton(): void {

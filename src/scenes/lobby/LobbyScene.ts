@@ -1,6 +1,7 @@
 import * as Phaser from 'phaser';
 import { ButtonComponent } from '@/components/ButtonComponent';
 import { HostDialog } from './HostDialog';
+import { IGetUser } from '@/interface/IUser';
 import { ImageKeyEnum } from '@/enum/ImageKeyEnum';
 import { JoinDialog } from './JoinDialog';
 import { MessageListContainer } from './MessageListContainer';
@@ -10,6 +11,7 @@ import { SceneKeyEnum } from '@/enum/SceneKeyEnum';
 import { Socket } from 'socket.io-client';
 import { SocketSingleton } from '@/config/SocketSingleton';
 import { UserListContainer } from './UserListContainer';
+import { UserSingleton } from '@/config/UserSingleton';
 
 export class LobbyScene extends Scene {
   constructor() {
@@ -18,9 +20,11 @@ export class LobbyScene extends Scene {
 
   private messageListContainer: MessageListContainer;
   private userListContainer: UserListContainer;
+  private user: IGetUser;
   private socket: Socket;
 
   create(): void {
+    this.user = UserSingleton.getInstance();
     this.createBg();
     this.createHeader();
     this.createMainSection();
@@ -29,9 +33,11 @@ export class LobbyScene extends Scene {
 
   private handleSocket(): void {
     this.socket = SocketSingleton.getInstance();
+    this.socket.connect();
     this.socket.on('connect', () => {
       console.log('Conectado ao servidor Socket.io');
-      this.messageListContainer.addMessageFromServer(this.socket.id as string);
+      this.socket.emit('updateUserName', this.user.name || this.socket.id);
+      this.messageListContainer.addMessageFromServer(this.user.name || (this.socket.id as string));
     });
     this.socket.on('disconnect', () => {
       console.log('Desconectado do servidor Socket.io');
@@ -53,7 +59,7 @@ export class LobbyScene extends Scene {
     const textX = 10;
     const textY = 30;
     const text = this.add
-      .text(textX, textY, 'User1', {
+      .text(textX, textY, `${this.user.name}`, {
         fontFamily: 'ArianHeavy',
         fontSize: '30px',
         color: '#ffffff',
@@ -87,6 +93,10 @@ export class LobbyScene extends Scene {
 
   private logout(): void {
     this.socket.disconnect();
+    this.socket.off('allUsers');
+    this.socket.off('lastMessage');
+    this.socket.off('connect');
+    this.socket.off('disconnect');
     removeAccessToken();
     this.scene.start(SceneKeyEnum.HomeScene);
   }
