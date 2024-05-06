@@ -51,8 +51,8 @@ export class LobbyScene extends Scene {
   }
 
   private createBg(): void {
-    const bootBg = this.add.image(0, 0, ImageKeyEnum.LobbyBg).setOrigin(0);
-    bootBg.setDisplaySize(this.cameras.main.width, this.cameras.main.height);
+    const lobbyBg = this.add.image(0, 0, ImageKeyEnum.LobbyBg).setOrigin(0);
+    lobbyBg.setDisplaySize(this.cameras.main.width, this.cameras.main.height);
   }
 
   private createNameText(): void {
@@ -93,10 +93,7 @@ export class LobbyScene extends Scene {
 
   private logout(): void {
     this.socket.disconnect();
-    this.socket.off('allUsers');
-    this.socket.off('lastMessage');
-    this.socket.off('connect');
-    this.socket.off('disconnect');
+    this.socket.removeAllListeners();
     removeAccessToken();
     this.scene.start(SceneKeyEnum.HomeScene);
   }

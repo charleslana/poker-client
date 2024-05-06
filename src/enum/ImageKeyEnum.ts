@@ -8,4 +8,5 @@ export enum ImageKeyEnum {
   EnterIcon = 'EnterIcon',
   AcceptIcon = 'AcceptIcon',
   DeleteIcon = 'DeleteIcon',
+  GameBg = 'GameBg',
 }

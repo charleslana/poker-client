@@ -44,8 +44,8 @@ export class HomeScene extends Scene {
   }
 
   private createBg(): void {
-    const bootBg = this.add.image(0, 0, ImageKeyEnum.HomeBg).setOrigin(0);
-    bootBg.setDisplaySize(this.cameras.main.width, this.cameras.main.height);
+    const homeBg = this.add.image(0, 0, ImageKeyEnum.HomeBg).setOrigin(0);
+    homeBg.setDisplaySize(this.cameras.main.width, this.cameras.main.height);
   }
 
   private createUI(): void {

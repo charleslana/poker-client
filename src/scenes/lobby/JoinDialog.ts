@@ -248,6 +248,8 @@ export class JoinDialog extends Phaser.GameObjects.Container {
         this.socket.off('allUsers');
         this.socket.off('lastMessage');
         this.socket.off('allRooms');
+        this.socket.off('connect');
+        this.socket.off('disconnect');
         this.scene.scene.start(SceneKeyEnum.GameScene, room);
       });
       this.socket.emit('joinRoom', this.selectedRoom.id);
