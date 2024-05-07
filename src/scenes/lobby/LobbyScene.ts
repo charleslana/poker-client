@@ -35,7 +35,7 @@ export class LobbyScene extends Scene {
     this.socket = SocketSingleton.getInstance();
     this.socket.connect();
     this.socket.on('connect', () => {
-      this.socket.emit('updateUserName', this.user.name || this.socket.id);
+      this.socket.emit('updateUserName', this.user.name || this.socket.id, this.user.id);
       console.log('Conectado ao servidor Socket.io');
     });
     this.socket.on('disconnect', () => {
@@ -45,7 +45,7 @@ export class LobbyScene extends Scene {
       this.messageListContainer.addMessageFromServer(this.user.name || (this.socket.id as string));
     });
     if (this.socket.connected) {
-      this.socket.emit('updateUserName', this.user.name || this.socket.id);
+      this.socket.emit('updateUserName', this.user.name || this.socket.id, this.user.id);
     }
   }
 

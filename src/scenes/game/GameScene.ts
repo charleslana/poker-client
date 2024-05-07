@@ -41,7 +41,7 @@ export class GameScene extends Scene {
 
   private handleSocket(): void {
     this.socket.on('connect', () => {
-      this.socket.emit('updateUserName', this.user.name || this.socket.id);
+      this.socket.emit('updateUserName', this.user.name || this.socket.id, this.user.id);
       console.log('Conectado ao servidor Socket.io');
     });
     this.socket.on('disconnect', () => {
