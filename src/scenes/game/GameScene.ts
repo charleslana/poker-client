@@ -1,3 +1,4 @@
+import { IGetUser } from '@/interface/IUser';
 import { ImageKeyEnum } from '@/enum/ImageKeyEnum';
 import { IRoom } from '@/interface/IRoom';
 import { Scene } from 'phaser';
@@ -13,11 +14,13 @@ export class GameScene extends Scene {
 
   private socket: Socket;
   private room: IRoom;
+  private user: IGetUser;
   private mainCenterX: number;
   private mainCenterY: number;
 
   init(data: IRoom): void {
     this.room = data;
+    this.user = UserSingleton.getInstance();
     console.log(this.room);
     this.mainCenterX = this.cameras.main.width / 2;
     this.mainCenterY = this.cameras.main.height / 2;
@@ -25,6 +28,7 @@ export class GameScene extends Scene {
 
   create(): void {
     this.socket = SocketSingleton.getInstance();
+    this.handleSocket();
     this.handleGetRoom();
     this.createBg();
     this.createCloseButton();
@@ -33,6 +37,16 @@ export class GameScene extends Scene {
         color: '#000000',
       })
       .setOrigin(0.5);
+  }
+
+  private handleSocket(): void {
+    this.socket.on('connect', () => {
+      this.socket.emit('updateUserName', this.user.name || this.socket.id);
+      console.log('Conectado ao servidor Socket.io');
+    });
+    this.socket.on('disconnect', () => {
+      console.log('Desconectado do servidor Socket.io');
+    });
   }
 
   private handleGetRoom(): void {
@@ -63,6 +77,8 @@ export class GameScene extends Scene {
     this.socket.on('leaveRoomSuccess', () => {
       this.socket.off('getRoom');
       this.socket.off('leaveRoomSuccess');
+      this.socket.off('connect');
+      this.socket.off('disconnect');
       this.scene.start(SceneKeyEnum.LobbyScene);
     });
   }

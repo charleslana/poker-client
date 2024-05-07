@@ -42,7 +42,6 @@ export class UserListContainer extends Phaser.GameObjects.Container {
       console.log('Lista de todos os usuários conectados:', users);
       this.changeUserList(users);
     });
-    this.socket.emit('getAllUsers');
   }
 
   private changeUserList(users: IPlayer[]): void {

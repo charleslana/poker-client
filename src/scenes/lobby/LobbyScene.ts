@@ -35,13 +35,18 @@ export class LobbyScene extends Scene {
     this.socket = SocketSingleton.getInstance();
     this.socket.connect();
     this.socket.on('connect', () => {
-      console.log('Conectado ao servidor Socket.io');
       this.socket.emit('updateUserName', this.user.name || this.socket.id);
-      this.messageListContainer.addMessageFromServer(this.user.name || (this.socket.id as string));
+      console.log('Conectado ao servidor Socket.io');
     });
     this.socket.on('disconnect', () => {
       console.log('Desconectado do servidor Socket.io');
     });
+    this.socket.on('joinLobbySuccess', () => {
+      this.messageListContainer.addMessageFromServer(this.user.name || (this.socket.id as string));
+    });
+    if (this.socket.connected) {
+      this.socket.emit('updateUserName', this.user.name || this.socket.id);
+    }
   }
 
   private createHeader(): void {

@@ -166,6 +166,8 @@ export class HostDialog extends Phaser.GameObjects.Container {
     this.socket.on('createRoomSuccess', (room: IRoom) => {
       this.socket.off('allUsers');
       this.socket.off('lastMessage');
+      this.socket.off('createRoomSuccess');
+      this.socket.off('joinLobbySuccess');
       this.socket.off('connect');
       this.socket.off('disconnect');
       this.scene.scene.start(SceneKeyEnum.GameScene, room);
