@@ -9,4 +9,7 @@ export enum ImageKeyEnum {
   AcceptIcon = 'AcceptIcon',
   DeleteIcon = 'DeleteIcon',
   GameBg = 'GameBg',
+  Card2OfClubs = 'Card2OfClubs',
+  Card3OfClubs = 'Card3OfClubs',
+  CardBack1 = 'CardBack1',
 }

@@ -29,10 +29,11 @@ export class PreloaderScene extends Scene {
     this.load.image(ImageKeyEnum.AcceptIcon, 'assets/images/accept.png');
     this.load.image(ImageKeyEnum.DeleteIcon, 'assets/images/delete.png');
     this.load.image(ImageKeyEnum.GameBg, 'assets/images/game_bg.jpg');
+    this.loadCards();
   }
 
   create(): void {
-    this.scene.start(SceneKeyEnum.HomeScene);
+    this.scene.start(SceneKeyEnum.GameScene);
   }
 
   private createBg(): void {
@@ -68,5 +69,11 @@ export class PreloaderScene extends Scene {
     this.load.on(Phaser.Loader.Events.PROGRESS, (progress: number) => {
       progressIndicator.width = 4 + (barWidth - 8) * progress;
     });
+  }
+
+  private loadCards(): void {
+    this.load.image(ImageKeyEnum.Card2OfClubs, 'assets/images/cards/2_of_clubs.png');
+    this.load.image(ImageKeyEnum.Card3OfClubs, 'assets/images/cards/3_of_clubs.png');
+    this.load.image(ImageKeyEnum.CardBack1, 'assets/images/cards/back_1.png');
   }
 }
