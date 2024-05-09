@@ -12,4 +12,5 @@ export enum ImageKeyEnum {
   Card2OfClubs = 'Card2OfClubs',
   Card3OfClubs = 'Card3OfClubs',
   CardBack1 = 'CardBack1',
+  ChipsIcon = 'ChipsIcon',
 }

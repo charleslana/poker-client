@@ -29,6 +29,7 @@ export class PreloaderScene extends Scene {
     this.load.image(ImageKeyEnum.AcceptIcon, 'assets/images/accept.png');
     this.load.image(ImageKeyEnum.DeleteIcon, 'assets/images/delete.png');
     this.load.image(ImageKeyEnum.GameBg, 'assets/images/game_bg.jpg');
+    this.load.image(ImageKeyEnum.ChipsIcon, 'assets/images/chips.png');
     this.loadCards();
   }
 

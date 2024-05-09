@@ -134,9 +134,61 @@ export class GameScene extends Scene {
         70,
         50,
         0x0000ff,
-        1
+        0
       )
       .setOrigin(0);
+
+    const dealerContainer = this.add.container(
+      defaultRectangle.displayOriginX -
+        defaultRectangle.displayWidth +
+        cardsRectangle.displayWidth +
+        4,
+      defaultRectangle.displayOriginY - defaultRectangle.displayHeight + 95
+    );
+
+    const dealerButton = this.add.graphics();
+    dealerButton.fillStyle(0x6785f7, 1);
+    dealerButton.fillRoundedRect(
+      defaultRectangle.displayOriginX -
+        defaultRectangle.displayWidth +
+        cardsRectangle.displayWidth +
+        3,
+      defaultRectangle.displayOriginY - defaultRectangle.displayHeight + 2,
+      25,
+      25,
+      12.5
+    );
+    dealerButton.lineStyle(2, 0x0e1671);
+    dealerButton.strokeRoundedRect(
+      defaultRectangle.displayOriginX -
+        defaultRectangle.displayWidth +
+        cardsRectangle.displayWidth +
+        2,
+      defaultRectangle.displayOriginY - defaultRectangle.displayHeight + 2,
+      26,
+      26,
+      13
+    );
+
+    const dealerText = this.add
+      .text(
+        defaultRectangle.displayOriginX -
+          defaultRectangle.displayWidth +
+          cardsRectangle.displayWidth +
+          5,
+        defaultRectangle.displayOriginY - defaultRectangle.displayHeight + 4.5,
+        'D',
+        {
+          fontFamily: 'ArianHeavy',
+          fontSize: '22px',
+          color: '#ffffff',
+          stroke: '#000000',
+          strokeThickness: 2,
+        }
+      )
+      .setOrigin(0);
+
+    dealerContainer.add([dealerButton, dealerText]);
 
     const blindRectangle = this.add
       .rectangle(
@@ -149,9 +201,88 @@ export class GameScene extends Scene {
         70,
         50,
         0x008000,
-        1
+        0
       )
       .setOrigin(0);
+
+    const blindContainer = this.add.container(
+      defaultRectangle.displayOriginX -
+        defaultRectangle.displayWidth +
+        cardsRectangle.displayWidth +
+        4,
+      defaultRectangle.displayOriginY -
+        defaultRectangle.displayHeight +
+        dealerRectangle.displayHeight +
+        95
+    );
+
+    // const blindButton = this.add.graphics();
+    // blindButton.fillStyle(0x1db622, 1);
+    // blindButton.fillRoundedRect(
+    //   defaultRectangle.displayOriginX -
+    //     defaultRectangle.displayWidth +
+    //     cardsRectangle.displayWidth +
+    //     3,
+    //   defaultRectangle.displayOriginY - defaultRectangle.displayHeight + 2,
+    //   25,
+    //   25,
+    //   12.5
+    // );
+    // blindButton.lineStyle(2, 0x003000);
+    // blindButton.strokeRoundedRect(
+    //   defaultRectangle.displayOriginX -
+    //     defaultRectangle.displayWidth +
+    //     cardsRectangle.displayWidth +
+    //     2,
+    //   defaultRectangle.displayOriginY - defaultRectangle.displayHeight + 2,
+    //   26,
+    //   26,
+    //   13
+    // );
+
+    const blindButton = this.add.graphics();
+    blindButton.fillStyle(0xff4602, 1);
+    blindButton.fillRoundedRect(
+      defaultRectangle.displayOriginX -
+        defaultRectangle.displayWidth +
+        cardsRectangle.displayWidth +
+        3,
+      defaultRectangle.displayOriginY - defaultRectangle.displayHeight + 2,
+      25,
+      25,
+      12.5
+    );
+    blindButton.lineStyle(2, 0x781a0f);
+    blindButton.strokeRoundedRect(
+      defaultRectangle.displayOriginX -
+        defaultRectangle.displayWidth +
+        cardsRectangle.displayWidth +
+        2,
+      defaultRectangle.displayOriginY - defaultRectangle.displayHeight + 2,
+      26,
+      26,
+      13
+    );
+
+    const blindText = this.add
+      .text(
+        defaultRectangle.displayOriginX -
+          defaultRectangle.displayWidth +
+          cardsRectangle.displayWidth +
+          4,
+        defaultRectangle.displayOriginY - defaultRectangle.displayHeight + 8.5,
+        'BB',
+        {
+          fontFamily: 'ArianHeavy',
+          fontSize: '13px',
+          color: '#ffffff',
+          stroke: '#000000',
+          strokeThickness: 2,
+        }
+      )
+      .setOrigin(0);
+
+    blindContainer.add([blindButton, blindText]);
 
     const infoPlayerRectangle = this.add
       .rectangle(
@@ -191,6 +322,35 @@ export class GameScene extends Scene {
         70,
         70,
         0xffd700,
+        0
+      )
+      .setOrigin(0);
+
+    const chips = this.add
+      .image(
+        defaultRectangle.displayOriginX -
+          defaultRectangle.displayWidth +
+          infoPlayerRectangle.displayWidth,
+        defaultRectangle.displayOriginY -
+          defaultRectangle.displayHeight +
+          cardsRectangle.displayHeight +
+          14,
+        ImageKeyEnum.ChipsIcon
+      )
+      .setScale(0.14)
+      .setOrigin(0);
+
+    const handRectangle = this.add
+      .rectangle(
+        defaultRectangle.displayOriginX - defaultRectangle.displayWidth,
+        defaultRectangle.displayOriginY -
+          defaultRectangle.displayHeight +
+          cardsRectangle.displayHeight +
+          playerChipsRectangle.displayHeight +
+          35,
+        170,
+        35,
+        0x964b00,
         1
       )
       .setOrigin(0);
@@ -201,10 +361,14 @@ export class GameScene extends Scene {
       this.firstCard,
       this.secondCard,
       dealerRectangle,
+      dealerContainer,
       blindRectangle,
+      blindContainer,
       infoPlayerRectangle,
       playerChipsRectangle,
       chipsImageRectangle,
+      chips,
+      handRectangle,
     ]);
   }
 
