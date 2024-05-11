@@ -26,7 +26,8 @@ export class Hand extends Phaser.GameObjects.Container {
   private firstCard: Phaser.GameObjects.Image;
   private secondCard: Phaser.GameObjects.Image;
 
-  public setContainerPosition(x: number, y: number): void {
+  public setContainerPosition(index: number): void {
+    const { x, y } = this.createUserTable(index + 1);
     this.container.setPosition(x, y);
   }
 
@@ -478,6 +479,28 @@ export class Hand extends Phaser.GameObjects.Container {
       const scaleFactor = maxWidth / currentWidth;
       const newSize = Math.floor(parseInt(text.style.fontSize.toString()) * scaleFactor);
       text.setFontSize(newSize);
+    }
+  }
+
+  private createUserTable(index: number): {
+    x: number;
+    y: number;
+  } {
+    switch (index) {
+      case 1:
+        return { x: this.mainCenterX - 200, y: this.mainCenterY + 250 };
+      case 2:
+        return { x: this.mainCenterX + 200, y: this.mainCenterY + 250 };
+      case 3:
+        return { x: this.mainCenterX - 500, y: this.mainCenterY };
+      case 4:
+        return { x: this.mainCenterX + 550, y: this.mainCenterY };
+      case 5:
+        return { x: this.mainCenterX - 200, y: this.mainCenterY - 300 };
+      case 6:
+        return { x: this.mainCenterX + 200, y: this.mainCenterY - 300 };
+      default:
+        return { x: 0, y: 0 };
     }
   }
 }

@@ -1,11 +1,14 @@
 import { Hand } from './Hand';
+import { ICard } from '@/interface/ICard';
 import { IGetUser } from '@/interface/IUser';
 import { ImageKeyEnum } from '@/enum/ImageKeyEnum';
+import { IPlayer } from '@/interface/IPlayer';
 import { IRoom } from '@/interface/IRoom';
 import { Scene } from 'phaser';
 import { SceneKeyEnum } from '@/enum/SceneKeyEnum';
 import { Socket } from 'socket.io-client';
 import { SocketSingleton } from '@/config/SocketSingleton';
+import { TableCard } from './TableCard';
 import { UserSingleton } from '@/config/UserSingleton';
 
 export class GameScene extends Scene {
@@ -16,6 +19,8 @@ export class GameScene extends Scene {
   private socket: Socket;
   private room: IRoom;
   private user: IGetUser;
+  private players: IPlayer[];
+  private tableCards: ICard[];
 
   init(data: IRoom): void {
     this.room = data;
@@ -29,8 +34,32 @@ export class GameScene extends Scene {
     this.handleGetRoom();
     this.createBg();
     this.createCloseButton();
-    const hand1 = new Hand(this);
-    hand1.changeBlind('small');
+    this.createUsersCards();
+    this.createTableCards();
+  }
+
+  private createUsersCards(): void {
+    this.players = Array.from({ length: 6 }, (_, index) => ({
+      id: index.toString(),
+      name: `User${index}`,
+    }));
+    this.players.forEach((player, index) => {
+      const hand = new Hand(this);
+      hand.setContainerPosition(index);
+      hand.changeUserNamePlayer(player.name);
+    });
+  }
+
+  private createTableCards(): void {
+    this.tableCards = Array.from({ length: 5 }, (_, index) => ({
+      id: index,
+      name: `Card${index}`,
+    }));
+    this.tableCards.forEach((_card, index) => {
+      const tableCard = new TableCard(this);
+      tableCard.setTableCard(index);
+      tableCard.createFlipEvent();
+    });
   }
 
   private handleSocket(): void {
@@ -76,66 +105,4 @@ export class GameScene extends Scene {
       this.scene.start(SceneKeyEnum.LobbyScene);
     });
   }
-
-  // private flip(): void {
-  //   const timeline = this.add.timeline([
-  //     // {
-  //     //   at: 0,
-  //     //   tween: {
-  //     //     targets: this.firstCard,
-  //     //     scale: 0.7,
-  //     //     duration: 300,
-  //     //   },
-  //     // },
-  //     {
-  //       at: 0,
-  //       tween: {
-  //         targets: this.firstCard,
-  //         scaleX: 0,
-  //         duration: 300,
-  //         delay: 200,
-  //         onComplete: () => {
-  //           this.firstCard.setTexture(ImageKeyEnum.Card2OfClubs);
-  //         },
-  //       },
-  //     },
-  //     {
-  //       at: 0,
-  //       tween: {
-  //         targets: this.secondCard,
-  //         scaleX: 0,
-  //         duration: 300,
-  //         delay: 200,
-  //         onComplete: () => {
-  //           this.secondCard.setTexture(ImageKeyEnum.Card3OfClubs);
-  //         },
-  //       },
-  //     },
-  //     // {
-  //     //   at: 800,
-  //     //   tween: {
-  //     //     targets: this.firstCard,
-  //     //     scaleX: 0.7,
-  //     //     duration: 300,
-  //     //   },
-  //     // },
-  //     {
-  //       at: 500,
-  //       tween: {
-  //         targets: this.firstCard,
-  //         scale: 0.5,
-  //         duration: 300,
-  //       },
-  //     },
-  //     {
-  //       at: 500,
-  //       tween: {
-  //         targets: this.secondCard,
-  //         scale: 0.5,
-  //         duration: 300,
-  //       },
-  //     },
-  //   ]);
-  //   timeline.play();
-  // }
 }
