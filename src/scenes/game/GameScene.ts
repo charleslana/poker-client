@@ -21,6 +21,7 @@ export class GameScene extends Scene {
   private user: IGetUser;
   private players: IPlayer[];
   private tableCards: ICard[];
+  private chips: Phaser.GameObjects.Text;
 
   init(data: IRoom): void {
     this.room = data;
@@ -34,6 +35,7 @@ export class GameScene extends Scene {
     this.handleGetRoom();
     this.createBg();
     this.createCloseButton();
+    this.createChips();
     this.createUsersCards();
     this.createTableCards();
   }
@@ -47,6 +49,7 @@ export class GameScene extends Scene {
       const hand = new Hand(this);
       hand.setContainerPosition(index);
       hand.changeUserNamePlayer(player.name);
+      hand.createFlipEvents();
     });
   }
 
@@ -59,7 +62,31 @@ export class GameScene extends Scene {
       const tableCard = new TableCard(this);
       tableCard.setTableCard(index);
       tableCard.createFlipEvent();
+      const hand = new Hand(this);
+      hand.hideContainer();
+      const { x, y } = hand.createUserTable(6);
+      hand.moveChipsToCenter(x, y, this.chips);
+      tableCard.moveCardToCenter(x, y);
     });
+  }
+
+  private createChips(): void {
+    const mainCenterX = this.cameras.main.width / 2;
+    const mainCenterY = this.cameras.main.height / 2;
+    const chips = this.add
+      .image(mainCenterX + 200, mainCenterY - 100, ImageKeyEnum.ChipsIcon)
+      .setScale(0.14)
+      .setOrigin(0);
+    const chipsCenterX = chips.x + chips.displayWidth / 2;
+    this.chips = this.add
+      .text(chipsCenterX, chips.y + chips.displayHeight + 10, '10', {
+        fontFamily: 'ArianHeavy',
+        fontSize: '22px',
+        color: '#ffffff',
+        stroke: '#000000',
+        strokeThickness: 2,
+      })
+      .setOrigin(0.5);
   }
 
   private handleSocket(): void {

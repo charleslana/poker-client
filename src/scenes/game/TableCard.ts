@@ -38,6 +38,48 @@ export class TableCard extends Phaser.GameObjects.Container {
     });
   }
 
+  public moveCardToCenter(x: number, y: number): void {
+    const card = this.scene.add.image(x, y, ImageKeyEnum.CardBack1).setScale(0.5).setOrigin(0);
+    card.setPosition(x, y);
+    const moveDuration = 500;
+    const tableCenterX = this.mainCenterX;
+    const tableCenterY = this.mainCenterY - 50;
+    this.scene.tweens.add({
+      targets: card,
+      x: tableCenterX,
+      y: tableCenterY,
+      duration: moveDuration,
+      onComplete: () => {
+        this.fadeOutCard(card);
+      },
+    });
+  }
+
+  private fadeOutCard(card: Phaser.GameObjects.Image): void {
+    const fadeDuration = 300;
+    this.scene.tweens.add({
+      targets: card,
+      alpha: 0,
+      duration: fadeDuration,
+      onComplete: () => {
+        // this.fadeInCard(card);
+      },
+    });
+  }
+
+  // private fadeInCard(card: Phaser.GameObjects.Image): void {
+  //   const fadeInDuration = 300;
+  //   const tableCenterX = this.mainCenterX;
+  //   const tableCenterY = this.mainCenterY - 50;
+  //   card.setPosition(tableCenterX, tableCenterY);
+  //   card.setAlpha(0);
+  //   this.scene.tweens.add({
+  //     targets: card,
+  //     alpha: 1,
+  //     duration: fadeInDuration,
+  //   });
+  // }
+
   private create(): void {
     this.mainCenterX = this.scene.cameras.main.width / 2;
     this.mainCenterY = this.scene.cameras.main.height / 2;
@@ -45,28 +87,29 @@ export class TableCard extends Phaser.GameObjects.Container {
   }
 
   private flip(): void {
-    const timeline = this.scene.add.timeline([
-      {
-        at: 0,
-        tween: {
-          targets: this.image,
-          scaleX: 0,
-          duration: 300,
-          delay: 200,
-          onComplete: () => {
-            this.image.setTexture(ImageKeyEnum.Card2OfClubs);
-          },
-        },
+    const flipDuration = 300;
+    const halfFlipDuration = flipDuration / 2;
+    this.scene.tweens.add({
+      targets: this.image,
+      scaleX: 0,
+      duration: halfFlipDuration,
+      onComplete: () => {
+        if (this.image.texture.key === ImageKeyEnum.CardBack1) {
+          this.image.setTexture(ImageKeyEnum.Card3OfClubs);
+        } else {
+          this.image.setTexture(ImageKeyEnum.CardBack1);
+        }
       },
-      {
-        at: 500,
-        tween: {
-          targets: this.image,
-          scale: 0.5,
-          duration: 300,
-        },
+      onCompleteScope: this,
+      onStart: () => {
+        this.image.setScale(0.5);
       },
-    ]);
-    timeline.play();
+    });
+    this.scene.tweens.add({
+      targets: this.image,
+      scaleX: 0.5,
+      duration: halfFlipDuration,
+      delay: halfFlipDuration,
+    });
   }
 }

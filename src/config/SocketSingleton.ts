@@ -7,7 +7,7 @@ export class SocketSingleton {
 
   static getInstance(): Socket {
     if (SocketSingleton.instance === null) {
-      SocketSingleton.instance = io(process.env.API_URL as string);
+      SocketSingleton.instance = io(process.env.API_URL as string, { autoConnect: false });
     }
     return SocketSingleton.instance;
   }

@@ -26,6 +26,10 @@ export class Hand extends Phaser.GameObjects.Container {
   private firstCard: Phaser.GameObjects.Image;
   private secondCard: Phaser.GameObjects.Image;
 
+  public hideContainer(): void {
+    this.container.setVisible(false);
+  }
+
   public setContainerPosition(index: number): void {
     const { x, y } = this.createUserTable(index + 1);
     this.container.setPosition(x, y);
@@ -70,6 +74,68 @@ export class Hand extends Phaser.GameObjects.Container {
 
   public changeSecondCardImage(image: ImageKeyEnum): void {
     this.secondCard.setTexture(image);
+  }
+
+  public createUserTable(index: number): {
+    x: number;
+    y: number;
+  } {
+    switch (index) {
+      case 1:
+        return { x: this.mainCenterX - 200, y: this.mainCenterY + 250 };
+      case 2:
+        return { x: this.mainCenterX + 200, y: this.mainCenterY + 250 };
+      case 3:
+        return { x: this.mainCenterX - 500, y: this.mainCenterY };
+      case 4:
+        return { x: this.mainCenterX + 550, y: this.mainCenterY };
+      case 5:
+        return { x: this.mainCenterX - 200, y: this.mainCenterY - 300 };
+      case 6:
+        return { x: this.mainCenterX + 200, y: this.mainCenterY - 300 };
+      default:
+        return { x: 0, y: 0 };
+    }
+  }
+
+  public createFlipEvents(): void {
+    this.firstCard.setInteractive().on(Phaser.Input.Events.POINTER_DOWN, () => {
+      this.flipCard(this.firstCard);
+      this.flipCard(this.secondCard);
+    });
+    this.secondCard.setInteractive().on(Phaser.Input.Events.POINTER_DOWN, () => {
+      this.flipCard(this.firstCard);
+      this.flipCard(this.secondCard);
+    });
+  }
+
+  public moveChipsToCenter(x: number, y: number, text: Phaser.GameObjects.Text): void {
+    const chips = this.scene.add.image(x, y, ImageKeyEnum.ChipsIcon).setScale(0.14).setOrigin(0);
+    chips.setPosition(x, y);
+    const moveDuration = 500;
+    const tableCenterX = this.mainCenterX + 200;
+    const tableCenterY = this.mainCenterY - 100;
+    this.scene.tweens.add({
+      targets: chips,
+      x: tableCenterX,
+      y: tableCenterY,
+      duration: moveDuration,
+      onComplete: () => {
+        this.fadeOutCard(chips, text);
+      },
+    });
+  }
+
+  private fadeOutCard(chips: Phaser.GameObjects.Image, text: Phaser.GameObjects.Text): void {
+    const fadeDuration = 300;
+    this.scene.tweens.add({
+      targets: chips,
+      alpha: 0,
+      duration: fadeDuration,
+      onComplete: () => {
+        text.setText((+text.text + 10).toString());
+      },
+    });
   }
 
   private create(): void {
@@ -482,25 +548,30 @@ export class Hand extends Phaser.GameObjects.Container {
     }
   }
 
-  private createUserTable(index: number): {
-    x: number;
-    y: number;
-  } {
-    switch (index) {
-      case 1:
-        return { x: this.mainCenterX - 200, y: this.mainCenterY + 250 };
-      case 2:
-        return { x: this.mainCenterX + 200, y: this.mainCenterY + 250 };
-      case 3:
-        return { x: this.mainCenterX - 500, y: this.mainCenterY };
-      case 4:
-        return { x: this.mainCenterX + 550, y: this.mainCenterY };
-      case 5:
-        return { x: this.mainCenterX - 200, y: this.mainCenterY - 300 };
-      case 6:
-        return { x: this.mainCenterX + 200, y: this.mainCenterY - 300 };
-      default:
-        return { x: 0, y: 0 };
-    }
+  private flipCard(card: Phaser.GameObjects.Image): void {
+    const flipDuration = 300;
+    const halfFlipDuration = flipDuration / 2;
+    this.scene.tweens.add({
+      targets: card,
+      scaleX: 0,
+      duration: halfFlipDuration,
+      onComplete: () => {
+        if (card.texture.key === ImageKeyEnum.CardBack1) {
+          card.setTexture(ImageKeyEnum.Card2OfClubs);
+        } else {
+          card.setTexture(ImageKeyEnum.CardBack1);
+        }
+      },
+      onCompleteScope: this,
+      onStart: () => {
+        card.setScale(0.5);
+      },
+    });
+    this.scene.tweens.add({
+      targets: card,
+      scaleX: 0.5,
+      duration: halfFlipDuration,
+      delay: halfFlipDuration,
+    });
   }
 }
