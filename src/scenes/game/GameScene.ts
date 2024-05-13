@@ -1,3 +1,4 @@
+import { ButtonComponent } from '@/components/ButtonComponent';
 import { Hand } from './Hand';
 import { ICard } from '@/interface/ICard';
 import { IGetUser } from '@/interface/IUser';
@@ -10,7 +11,6 @@ import { Socket } from 'socket.io-client';
 import { SocketSingleton } from '@/config/SocketSingleton';
 import { TableCard } from './TableCard';
 import { UserSingleton } from '@/config/UserSingleton';
-import { ButtonComponent } from '@/components/ButtonComponent';
 
 export class GameScene extends Scene {
   constructor() {
@@ -56,6 +56,7 @@ export class GameScene extends Scene {
       hand.setContainerPosition(index);
       hand.changeUserNamePlayer(player.name);
       hand.createFlipEvents();
+      hand.hideWinPlayer();
     });
   }
 
@@ -138,12 +139,18 @@ export class GameScene extends Scene {
   }
 
   private createPlayButton(): void {
-    const buttonComponent = new ButtonComponent(this);
-    buttonComponent.createButton(
-      this.mainCenterX - 100,
-      this.mainCenterY * 2 - 100,
-      'Play',
-      'green'
-    );
+    const playButton = new ButtonComponent(this);
+    playButton.createButton(this.mainCenterX - 100, this.mainCenterY * 2 - 100, 'Play', 'green');
+    playButton.hide();
+    this.createGameButtons();
+  }
+
+  private createGameButtons(): void {
+    const foldButton = new ButtonComponent(this);
+    foldButton.createButton(this.mainCenterX - 350, this.mainCenterY * 2 - 100, 'Fold', 'purple');
+    const callButton = new ButtonComponent(this);
+    callButton.createButton(this.mainCenterX - 70, this.mainCenterY * 2 - 100, 'Call');
+    const riseButton = new ButtonComponent(this);
+    riseButton.createButton(this.mainCenterX + 200, this.mainCenterY * 2 - 100, 'Rise', 'red');
   }
 }

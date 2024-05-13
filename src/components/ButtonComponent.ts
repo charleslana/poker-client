@@ -5,13 +5,15 @@ export class ButtonComponent extends Phaser.GameObjects.Container {
     super(scene);
   }
 
+  private container: Phaser.GameObjects.Container;
+
   public createButton(
     x: number,
     y: number,
     text: string,
-    color?: 'green' | 'gray' | 'red'
+    color?: 'green' | 'purple' | 'red'
   ): Phaser.GameObjects.Container {
-    const container = this.scene.add.container(x, y);
+    this.container = this.scene.add.container(x, y);
     const buttonText = this.createButtonText(text);
     const textWidth = buttonText.width;
     const textHeight = buttonText.height;
@@ -20,15 +22,19 @@ export class ButtonComponent extends Phaser.GameObjects.Container {
     buttonWidth = Math.max(buttonWidth, 200);
     buttonHeight = Math.max(buttonHeight, 50);
     const graphics = this.createBackgroundText(buttonWidth, buttonHeight, color);
-    container.setSize(buttonWidth, buttonHeight);
-    container.displayWidth = buttonWidth;
-    container.displayHeight = buttonHeight;
+    this.container.setSize(buttonWidth, buttonHeight);
+    this.container.displayWidth = buttonWidth;
+    this.container.displayHeight = buttonHeight;
     buttonText.setPosition(buttonWidth / 2, buttonHeight / 2);
-    container.setInteractive({ cursor: 'pointer' });
-    container.input!.hitArea.x += buttonWidth / 2;
-    container.input!.hitArea.y += buttonHeight / 2;
-    container.add([graphics, buttonText]);
-    return container;
+    this.container.setInteractive({ cursor: 'pointer' });
+    this.container.input!.hitArea.x += buttonWidth / 2;
+    this.container.input!.hitArea.y += buttonHeight / 2;
+    this.container.add([graphics, buttonText]);
+    return this.container;
+  }
+
+  public hide(): void {
+    this.container.setVisible(false);
   }
 
   private createButtonText(text: string): Phaser.GameObjects.Text {
@@ -47,7 +53,7 @@ export class ButtonComponent extends Phaser.GameObjects.Container {
   private createBackgroundText(
     buttonWidth: number,
     buttonHeight: number,
-    color?: 'green' | 'gray' | 'red'
+    color?: 'green' | 'purple' | 'red'
   ): Phaser.GameObjects.Graphics {
     const graphics = this.scene.add.graphics();
     switch (color) {
@@ -55,9 +61,9 @@ export class ButtonComponent extends Phaser.GameObjects.Container {
         graphics.fillGradientStyle(0x00750c, 0x00750c, 0x00c70c, 0x00c70c, 1);
         graphics.lineStyle(5, 0x002e08);
         break;
-      case 'gray':
-        graphics.fillGradientStyle(0x585858, 0x585858, 0x8c8c8c, 0x8c8c8c, 1);
-        graphics.lineStyle(5, 0x484a49);
+      case 'purple':
+        graphics.fillGradientStyle(0x4a0a46, 0x4a0a46, 0x62125d, 0x62125d, 1);
+        graphics.lineStyle(5, 0x240523);
         break;
       case 'red':
         graphics.fillGradientStyle(0x8c1a03, 0x8c1a03, 0xf83b17, 0xf83b17, 1);

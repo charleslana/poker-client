@@ -16,6 +16,9 @@ export class Hand extends Phaser.GameObjects.Container {
   private dealerRectangle: Phaser.GameObjects.Rectangle;
   private blindContainer: Phaser.GameObjects.Container;
   private infoPlayerRectangle: Phaser.GameObjects.Rectangle;
+  private winPlayerRectangle: Phaser.GameObjects.Rectangle;
+  private winsText: Phaser.GameObjects.Text;
+  private scoreText: Phaser.GameObjects.Text;
   private playerChipsRectangle: Phaser.GameObjects.Rectangle;
   private handRectangle: Phaser.GameObjects.Rectangle;
   private isOwnerRectangle: Phaser.GameObjects.Rectangle;
@@ -126,6 +129,18 @@ export class Hand extends Phaser.GameObjects.Container {
     });
   }
 
+  public showWinPlayer(): void {
+    this.winsText.setVisible(true);
+    this.scoreText.setVisible(true);
+    this.winPlayerRectangle.setVisible(true);
+  }
+
+  public hideWinPlayer(): void {
+    this.winsText.setVisible(false);
+    this.scoreText.setVisible(false);
+    this.winPlayerRectangle.setVisible(false);
+  }
+
   private fadeOutCard(chips: Phaser.GameObjects.Image, text: Phaser.GameObjects.Text): void {
     const fadeDuration = 300;
     this.scene.tweens.add({
@@ -174,7 +189,7 @@ export class Hand extends Phaser.GameObjects.Container {
   private createFirstCard(): void {
     this.firstCard = this.scene.add
       .image(
-        this.defaultRectangle.displayOriginX - this.defaultRectangle.displayWidth - 40,
+        this.defaultRectangle.displayOriginX - this.defaultRectangle.displayWidth - 25,
         this.defaultRectangle.displayOriginY - this.defaultRectangle.displayHeight + 20,
         ImageKeyEnum.CardBack1
       )
@@ -187,7 +202,7 @@ export class Hand extends Phaser.GameObjects.Container {
   private createSecondCard(): void {
     this.secondCard = this.scene.add
       .image(
-        this.defaultRectangle.displayOriginX - this.defaultRectangle.displayWidth + 20,
+        this.defaultRectangle.displayOriginX - this.defaultRectangle.displayWidth + 25,
         this.defaultRectangle.displayOriginY - this.defaultRectangle.displayHeight + 20,
         ImageKeyEnum.CardBack1
       )
@@ -403,8 +418,51 @@ export class Hand extends Phaser.GameObjects.Container {
       .setOrigin(0)
       .setStrokeStyle(2, 0x000000);
     this.container.add(this.infoPlayerRectangle);
+    this.createWinPlayerRectangle();
     this.createInfoPlayerText();
     this.createOwnerPlayerRectangle();
+  }
+
+  private createWinPlayerRectangle(): void {
+    this.winPlayerRectangle = this.scene.add
+      .rectangle(
+        this.defaultRectangle.displayOriginX - this.defaultRectangle.displayWidth + 10,
+        this.defaultRectangle.displayOriginY -
+          this.defaultRectangle.displayHeight +
+          this.cardsRectangle.displayHeight -
+          25,
+        80,
+        30,
+        0xeb7b00,
+        1
+      )
+      .setOrigin(0)
+      .setStrokeStyle(2, 0x000000);
+    this.container.add(this.winPlayerRectangle);
+    this.createWinPlayerText();
+  }
+
+  private createWinPlayerText(): void {
+    this.winsText = this.scene.add
+      .text(
+        this.winPlayerRectangle.x + this.winPlayerRectangle.width / 2,
+        this.winPlayerRectangle.y + this.winPlayerRectangle.height / 2 - 7,
+        'Wins',
+        { fontFamily: 'ArianHeavy', fontSize: '16px', color: '#ffffff' }
+      )
+      .setOrigin(0.5);
+    this.scoreText = this.scene.add
+      .text(
+        this.winPlayerRectangle.x + this.winPlayerRectangle.width / 2,
+        this.winPlayerRectangle.y + this.winPlayerRectangle.height / 2 + 5,
+        '7.5',
+        { fontFamily: 'ArianHeavy', fontSize: '16px', color: '#ffffff' }
+      )
+      .setOrigin(0.5);
+    const maxTextWidth = this.winPlayerRectangle.width * 0.9;
+    this.adjustFontSizeToFit(this.winsText, maxTextWidth);
+    this.adjustFontSizeToFit(this.scoreText, maxTextWidth);
+    this.container.add([this.winsText, this.scoreText]);
   }
 
   private createInfoPlayerText(): void {
