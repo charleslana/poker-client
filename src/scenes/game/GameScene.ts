@@ -10,6 +10,7 @@ import { Socket } from 'socket.io-client';
 import { SocketSingleton } from '@/config/SocketSingleton';
 import { TableCard } from './TableCard';
 import { UserSingleton } from '@/config/UserSingleton';
+import { ButtonComponent } from '@/components/ButtonComponent';
 
 export class GameScene extends Scene {
   constructor() {
@@ -19,11 +20,15 @@ export class GameScene extends Scene {
   private socket: Socket;
   private room: IRoom;
   private user: IGetUser;
+  private mainCenterX: number;
+  private mainCenterY: number;
   private players: IPlayer[];
   private tableCards: ICard[];
   private chips: Phaser.GameObjects.Text;
 
   init(data: IRoom): void {
+    this.mainCenterX = this.cameras.main.width / 2;
+    this.mainCenterY = this.cameras.main.height / 2;
     this.room = data;
     this.user = UserSingleton.getInstance();
     console.log(this.room);
@@ -38,6 +43,7 @@ export class GameScene extends Scene {
     this.createChips();
     this.createUsersCards();
     this.createTableCards();
+    this.createPlayButton();
   }
 
   private createUsersCards(): void {
@@ -71,10 +77,8 @@ export class GameScene extends Scene {
   }
 
   private createChips(): void {
-    const mainCenterX = this.cameras.main.width / 2;
-    const mainCenterY = this.cameras.main.height / 2;
     const chips = this.add
-      .image(mainCenterX + 200, mainCenterY - 100, ImageKeyEnum.ChipsIcon)
+      .image(this.mainCenterX + 200, this.mainCenterY - 100, ImageKeyEnum.ChipsIcon)
       .setScale(0.14)
       .setOrigin(0);
     const chipsCenterX = chips.x + chips.displayWidth / 2;
@@ -131,5 +135,15 @@ export class GameScene extends Scene {
       this.socket.off('disconnect');
       this.scene.start(SceneKeyEnum.LobbyScene);
     });
+  }
+
+  private createPlayButton(): void {
+    const buttonComponent = new ButtonComponent(this);
+    buttonComponent.createButton(
+      this.mainCenterX - 100,
+      this.mainCenterY * 2 - 100,
+      'Play',
+      'green'
+    );
   }
 }
