@@ -9,15 +9,15 @@ export class Hand extends Phaser.GameObjects.Container {
 
   public firstCard: Phaser.GameObjects.Image;
   public secondCard: Phaser.GameObjects.Image;
+  public dealerContainer: Phaser.GameObjects.Container;
+  public blindContainer: Phaser.GameObjects.Container;
 
   private mainCenterX: number;
   private mainCenterY: number;
   private container: Phaser.GameObjects.Container;
   private defaultRectangle: Phaser.GameObjects.Rectangle;
   private cardsRectangle: Phaser.GameObjects.Rectangle;
-  private dealerContainer: Phaser.GameObjects.Container;
   private dealerRectangle: Phaser.GameObjects.Rectangle;
-  private blindContainer: Phaser.GameObjects.Container;
   private infoPlayerRectangle: Phaser.GameObjects.Rectangle;
   private winPlayerRectangle: Phaser.GameObjects.Rectangle;
   private winsText: Phaser.GameObjects.Text;
@@ -37,6 +37,11 @@ export class Hand extends Phaser.GameObjects.Container {
   public hideCards(): void {
     this.firstCard.setVisible(false);
     this.secondCard.setVisible(false);
+  }
+
+  public hideButtons(): void {
+    this.dealerContainer.setVisible(false);
+    this.blindContainer.setVisible(false);
   }
 
   public setContainerPosition(index: number): void {
@@ -159,6 +164,18 @@ export class Hand extends Phaser.GameObjects.Container {
       onComplete: () => {
         console.log('Carta tornada visível');
       },
+    });
+  }
+
+  public animateButton(button: Phaser.GameObjects.Container): void {
+    button.setVisible(true);
+    this.scene.tweens.add({
+      targets: button,
+      scaleX: 1.2,
+      scaleY: 1.2,
+      duration: 500,
+      ease: 'Power2',
+      yoyo: true,
     });
   }
 
@@ -329,7 +346,6 @@ export class Hand extends Phaser.GameObjects.Container {
     this.container.add(blindRectangle);
     this.createBlindContainer();
     this.createSmallBlind();
-    this.createBigBlind();
     this.container.add(this.blindContainer);
   }
 

@@ -65,12 +65,15 @@ export class GameScene extends Scene {
       hand.changeUserNamePlayer(player.name);
       hand.createFlipEvents();
       hand.hideCards();
+      hand.hideButtons();
     });
     this.click();
   }
 
   private click(): void {
     const player = this.findPlayerById('6');
+    const player2 = this.findPlayerById('2');
+    const player3 = this.findPlayerById('4');
     this.input.on(Phaser.Input.Events.POINTER_DOWN, () => {
       player?.hand?.hideWinPlayer();
       this.foldButton.hide();
@@ -78,6 +81,10 @@ export class GameScene extends Scene {
       this.riseButton.hide();
       this.watchButton.show();
       this.showAllCards();
+      player?.hand?.animateButton(player.hand.dealerContainer);
+      player2?.hand?.changeBlind('big');
+      player2?.hand?.animateButton(player2.hand.blindContainer);
+      player3?.hand?.animateButton(player3.hand.blindContainer);
     });
   }
 
