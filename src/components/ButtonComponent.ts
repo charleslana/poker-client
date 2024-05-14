@@ -37,6 +37,10 @@ export class ButtonComponent extends Phaser.GameObjects.Container {
     this.container.setVisible(false);
   }
 
+  public show(): void {
+    this.container.setVisible(true);
+  }
+
   private createButtonText(text: string): Phaser.GameObjects.Text {
     return this.scene.add
       .text(0, 0, text, {

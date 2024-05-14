@@ -39,7 +39,7 @@ export class TableCard extends Phaser.GameObjects.Container {
   }
 
   public moveCardToCenter(x: number, y: number): void {
-    const card = this.scene.add.image(x, y, ImageKeyEnum.CardBack1).setScale(0.5).setOrigin(0);
+    const card = this.scene.add.image(x, y, ImageKeyEnum.CardBack).setScale(0.34).setOrigin(0);
     card.setPosition(x, y);
     const moveDuration = 500;
     const tableCenterX = this.mainCenterX;
@@ -83,7 +83,7 @@ export class TableCard extends Phaser.GameObjects.Container {
   private create(): void {
     this.mainCenterX = this.scene.cameras.main.width / 2;
     this.mainCenterY = this.scene.cameras.main.height / 2;
-    this.image = this.scene.add.image(0, 0, ImageKeyEnum.CardBack1).setScale(0.5).setOrigin(0);
+    this.image = this.scene.add.image(0, 0, ImageKeyEnum.CardBack).setScale(0.34).setOrigin(0);
   }
 
   private flip(): void {
@@ -94,20 +94,20 @@ export class TableCard extends Phaser.GameObjects.Container {
       scaleX: 0,
       duration: halfFlipDuration,
       onComplete: () => {
-        if (this.image.texture.key === ImageKeyEnum.CardBack1) {
-          this.image.setTexture(ImageKeyEnum.Card3OfClubs);
+        if (this.image.texture.key === ImageKeyEnum.CardBack) {
+          this.image.setTexture(ImageKeyEnum.Card3OfDiamonds);
         } else {
-          this.image.setTexture(ImageKeyEnum.CardBack1);
+          this.image.setTexture(ImageKeyEnum.CardBack);
         }
       },
       onCompleteScope: this,
       onStart: () => {
-        this.image.setScale(0.5);
+        this.image.setScale(0.34);
       },
     });
     this.scene.tweens.add({
       targets: this.image,
-      scaleX: 0.5,
+      scaleX: 0.34,
       duration: halfFlipDuration,
       delay: halfFlipDuration,
     });

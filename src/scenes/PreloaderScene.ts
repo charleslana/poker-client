@@ -78,71 +78,70 @@ export class PreloaderScene extends Scene {
     this.loadDiamondsCards();
     this.loadHeartsCards();
     this.loadSpadesCards();
-    this.load.image(ImageKeyEnum.CardBack1, 'assets/images/cards/back_1.png');
-    this.load.image(ImageKeyEnum.CardBack2, 'assets/images/cards/back_2.png');
+    this.load.svg(ImageKeyEnum.CardBack, 'assets/images/cards/back.svg');
   }
 
   private loadClubsCards(): void {
-    this.load.image(ImageKeyEnum.Card2OfClubs, 'assets/images/cards/2_of_clubs.png');
-    this.load.image(ImageKeyEnum.Card3OfClubs, 'assets/images/cards/3_of_clubs.png');
-    this.load.image(ImageKeyEnum.Card4OfClubs, 'assets/images/cards/4_of_clubs.png');
-    this.load.image(ImageKeyEnum.Card5OfClubs, 'assets/images/cards/5_of_clubs.png');
-    this.load.image(ImageKeyEnum.Card6OfClubs, 'assets/images/cards/6_of_clubs.png');
-    this.load.image(ImageKeyEnum.Card7OfClubs, 'assets/images/cards/7_of_clubs.png');
-    this.load.image(ImageKeyEnum.Card8OfClubs, 'assets/images/cards/8_of_clubs.png');
-    this.load.image(ImageKeyEnum.Card9OfClubs, 'assets/images/cards/9_of_clubs.png');
-    this.load.image(ImageKeyEnum.Card10OfClubs, 'assets/images/cards/10_of_clubs.png');
-    this.load.image(ImageKeyEnum.CardJackOfClubs, 'assets/images/cards/jack_of_clubs.png');
-    this.load.image(ImageKeyEnum.CardQueenOfClubs, 'assets/images/cards/queen_of_clubs.png');
-    this.load.image(ImageKeyEnum.CardKingOfClubs, 'assets/images/cards/king_of_clubs.png');
-    this.load.image(ImageKeyEnum.CardAceOfClubs, 'assets/images/cards/ace_of_clubs.png');
+    this.load.svg(ImageKeyEnum.Card2OfClubs, 'assets/images/cards/2_of_clubs.svg');
+    this.load.svg(ImageKeyEnum.Card3OfClubs, 'assets/images/cards/3_of_clubs.svg');
+    this.load.svg(ImageKeyEnum.Card4OfClubs, 'assets/images/cards/4_of_clubs.svg');
+    this.load.svg(ImageKeyEnum.Card5OfClubs, 'assets/images/cards/5_of_clubs.svg');
+    this.load.svg(ImageKeyEnum.Card6OfClubs, 'assets/images/cards/6_of_clubs.svg');
+    this.load.svg(ImageKeyEnum.Card7OfClubs, 'assets/images/cards/7_of_clubs.svg');
+    this.load.svg(ImageKeyEnum.Card8OfClubs, 'assets/images/cards/8_of_clubs.svg');
+    this.load.svg(ImageKeyEnum.Card9OfClubs, 'assets/images/cards/9_of_clubs.svg');
+    this.load.svg(ImageKeyEnum.Card10OfClubs, 'assets/images/cards/10_of_clubs.svg');
+    this.load.svg(ImageKeyEnum.CardJackOfClubs, 'assets/images/cards/jack_of_clubs.svg');
+    this.load.svg(ImageKeyEnum.CardQueenOfClubs, 'assets/images/cards/queen_of_clubs.svg');
+    this.load.svg(ImageKeyEnum.CardKingOfClubs, 'assets/images/cards/king_of_clubs.svg');
+    this.load.svg(ImageKeyEnum.CardAceOfClubs, 'assets/images/cards/ace_of_clubs.svg');
   }
 
   private loadDiamondsCards(): void {
-    this.load.image(ImageKeyEnum.Card2OfDiamonds, 'assets/images/cards/2_of_diamonds.png');
-    this.load.image(ImageKeyEnum.Card3OfDiamonds, 'assets/images/cards/3_of_diamonds.png');
-    this.load.image(ImageKeyEnum.Card4OfDiamonds, 'assets/images/cards/4_of_diamonds.png');
-    this.load.image(ImageKeyEnum.Card5OfDiamonds, 'assets/images/cards/5_of_diamonds.png');
-    this.load.image(ImageKeyEnum.Card6OfDiamonds, 'assets/images/cards/6_of_diamonds.png');
-    this.load.image(ImageKeyEnum.Card7OfDiamonds, 'assets/images/cards/7_of_diamonds.png');
-    this.load.image(ImageKeyEnum.Card8OfDiamonds, 'assets/images/cards/8_of_diamonds.png');
-    this.load.image(ImageKeyEnum.Card9OfDiamonds, 'assets/images/cards/9_of_diamonds.png');
-    this.load.image(ImageKeyEnum.Card10OfDiamonds, 'assets/images/cards/10_of_diamonds.png');
-    this.load.image(ImageKeyEnum.CardJackOfDiamonds, 'assets/images/cards/jack_of_diamonds.png');
-    this.load.image(ImageKeyEnum.CardQueenOfDiamonds, 'assets/images/cards/queen_of_diamonds.png');
-    this.load.image(ImageKeyEnum.CardKingOfDiamonds, 'assets/images/cards/king_of_diamonds.png');
-    this.load.image(ImageKeyEnum.CardAceOfDiamonds, 'assets/images/cards/ace_of_diamonds.png');
+    this.load.svg(ImageKeyEnum.Card2OfDiamonds, 'assets/images/cards/2_of_diamonds.svg');
+    this.load.svg(ImageKeyEnum.Card3OfDiamonds, 'assets/images/cards/3_of_diamonds.svg');
+    this.load.svg(ImageKeyEnum.Card4OfDiamonds, 'assets/images/cards/4_of_diamonds.svg');
+    this.load.svg(ImageKeyEnum.Card5OfDiamonds, 'assets/images/cards/5_of_diamonds.svg');
+    this.load.svg(ImageKeyEnum.Card6OfDiamonds, 'assets/images/cards/6_of_diamonds.svg');
+    this.load.svg(ImageKeyEnum.Card7OfDiamonds, 'assets/images/cards/7_of_diamonds.svg');
+    this.load.svg(ImageKeyEnum.Card8OfDiamonds, 'assets/images/cards/8_of_diamonds.svg');
+    this.load.svg(ImageKeyEnum.Card9OfDiamonds, 'assets/images/cards/9_of_diamonds.svg');
+    this.load.svg(ImageKeyEnum.Card10OfDiamonds, 'assets/images/cards/10_of_diamonds.svg');
+    this.load.svg(ImageKeyEnum.CardJackOfDiamonds, 'assets/images/cards/jack_of_diamonds.svg');
+    this.load.svg(ImageKeyEnum.CardQueenOfDiamonds, 'assets/images/cards/queen_of_diamonds.svg');
+    this.load.svg(ImageKeyEnum.CardKingOfDiamonds, 'assets/images/cards/king_of_diamonds.svg');
+    this.load.svg(ImageKeyEnum.CardAceOfDiamonds, 'assets/images/cards/ace_of_diamonds.svg');
   }
 
   private loadHeartsCards(): void {
-    this.load.image(ImageKeyEnum.Card2OfHearts, 'assets/images/cards/2_of_hearts.png');
-    this.load.image(ImageKeyEnum.Card3OfHearts, 'assets/images/cards/3_of_hearts.png');
-    this.load.image(ImageKeyEnum.Card4OfHearts, 'assets/images/cards/4_of_hearts.png');
-    this.load.image(ImageKeyEnum.Card5OfHearts, 'assets/images/cards/5_of_hearts.png');
-    this.load.image(ImageKeyEnum.Card6OfHearts, 'assets/images/cards/6_of_hearts.png');
-    this.load.image(ImageKeyEnum.Card7OfHearts, 'assets/images/cards/7_of_hearts.png');
-    this.load.image(ImageKeyEnum.Card8OfHearts, 'assets/images/cards/8_of_hearts.png');
-    this.load.image(ImageKeyEnum.Card9OfHearts, 'assets/images/cards/9_of_hearts.png');
-    this.load.image(ImageKeyEnum.Card10OfHearts, 'assets/images/cards/10_of_hearts.png');
-    this.load.image(ImageKeyEnum.CardJackOfHearts, 'assets/images/cards/jack_of_hearts.png');
-    this.load.image(ImageKeyEnum.CardQueenOfHearts, 'assets/images/cards/queen_of_hearts.png');
-    this.load.image(ImageKeyEnum.CardKingOfHearts, 'assets/images/cards/king_of_hearts.png');
-    this.load.image(ImageKeyEnum.CardAceOfHearts, 'assets/images/cards/ace_of_hearts.png');
+    this.load.svg(ImageKeyEnum.Card2OfHearts, 'assets/images/cards/2_of_hearts.svg');
+    this.load.svg(ImageKeyEnum.Card3OfHearts, 'assets/images/cards/3_of_hearts.svg');
+    this.load.svg(ImageKeyEnum.Card4OfHearts, 'assets/images/cards/4_of_hearts.svg');
+    this.load.svg(ImageKeyEnum.Card5OfHearts, 'assets/images/cards/5_of_hearts.svg');
+    this.load.svg(ImageKeyEnum.Card6OfHearts, 'assets/images/cards/6_of_hearts.svg');
+    this.load.svg(ImageKeyEnum.Card7OfHearts, 'assets/images/cards/7_of_hearts.svg');
+    this.load.svg(ImageKeyEnum.Card8OfHearts, 'assets/images/cards/8_of_hearts.svg');
+    this.load.svg(ImageKeyEnum.Card9OfHearts, 'assets/images/cards/9_of_hearts.svg');
+    this.load.svg(ImageKeyEnum.Card10OfHearts, 'assets/images/cards/10_of_hearts.svg');
+    this.load.svg(ImageKeyEnum.CardJackOfHearts, 'assets/images/cards/jack_of_hearts.svg');
+    this.load.svg(ImageKeyEnum.CardQueenOfHearts, 'assets/images/cards/queen_of_hearts.svg');
+    this.load.svg(ImageKeyEnum.CardKingOfHearts, 'assets/images/cards/king_of_hearts.svg');
+    this.load.svg(ImageKeyEnum.CardAceOfHearts, 'assets/images/cards/ace_of_hearts.svg');
   }
 
   private loadSpadesCards(): void {
-    this.load.image(ImageKeyEnum.Card2OfSpades, 'assets/images/cards/2_of_spades.png');
-    this.load.image(ImageKeyEnum.Card3OfSpades, 'assets/images/cards/3_of_spades.png');
-    this.load.image(ImageKeyEnum.Card4OfSpades, 'assets/images/cards/4_of_spades.png');
-    this.load.image(ImageKeyEnum.Card5OfSpades, 'assets/images/cards/5_of_spades.png');
-    this.load.image(ImageKeyEnum.Card6OfSpades, 'assets/images/cards/6_of_spades.png');
-    this.load.image(ImageKeyEnum.Card7OfSpades, 'assets/images/cards/7_of_spades.png');
-    this.load.image(ImageKeyEnum.Card8OfSpades, 'assets/images/cards/8_of_spades.png');
-    this.load.image(ImageKeyEnum.Card9OfSpades, 'assets/images/cards/9_of_spades.png');
-    this.load.image(ImageKeyEnum.Card10OfSpades, 'assets/images/cards/10_of_spades.png');
-    this.load.image(ImageKeyEnum.CardJackOfSpades, 'assets/images/cards/jack_of_spades.png');
-    this.load.image(ImageKeyEnum.CardQueenOfSpades, 'assets/images/cards/queen_of_spades.png');
-    this.load.image(ImageKeyEnum.CardKingOfSpades, 'assets/images/cards/king_of_spades.png');
-    this.load.image(ImageKeyEnum.CardAceOfSpades, 'assets/images/cards/ace_of_spades.png');
+    this.load.svg(ImageKeyEnum.Card2OfSpades, 'assets/images/cards/2_of_spades.svg');
+    this.load.svg(ImageKeyEnum.Card3OfSpades, 'assets/images/cards/3_of_spades.svg');
+    this.load.svg(ImageKeyEnum.Card4OfSpades, 'assets/images/cards/4_of_spades.svg');
+    this.load.svg(ImageKeyEnum.Card5OfSpades, 'assets/images/cards/5_of_spades.svg');
+    this.load.svg(ImageKeyEnum.Card6OfSpades, 'assets/images/cards/6_of_spades.svg');
+    this.load.svg(ImageKeyEnum.Card7OfSpades, 'assets/images/cards/7_of_spades.svg');
+    this.load.svg(ImageKeyEnum.Card8OfSpades, 'assets/images/cards/8_of_spades.svg');
+    this.load.svg(ImageKeyEnum.Card9OfSpades, 'assets/images/cards/9_of_spades.svg');
+    this.load.svg(ImageKeyEnum.Card10OfSpades, 'assets/images/cards/10_of_spades.svg');
+    this.load.svg(ImageKeyEnum.CardJackOfSpades, 'assets/images/cards/jack_of_spades.svg');
+    this.load.svg(ImageKeyEnum.CardQueenOfSpades, 'assets/images/cards/queen_of_spades.svg');
+    this.load.svg(ImageKeyEnum.CardKingOfSpades, 'assets/images/cards/king_of_spades.svg');
+    this.load.svg(ImageKeyEnum.CardAceOfSpades, 'assets/images/cards/ace_of_spades.svg');
   }
 }

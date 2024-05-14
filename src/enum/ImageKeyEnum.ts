@@ -63,6 +63,5 @@ export enum ImageKeyEnum {
   CardQueenOfSpades = 'CardQueenOfSpades',
   CardKingOfSpades = 'CardKingOfSpades',
   CardAceOfSpades = 'CardAceOfSpades',
-  CardBack1 = 'CardBack1',
-  CardBack2 = 'CardBack2',
+  CardBack = 'CardBack',
 }

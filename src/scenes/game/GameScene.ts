@@ -25,6 +25,13 @@ export class GameScene extends Scene {
   private players: IPlayer[];
   private tableCards: ICard[];
   private chips: Phaser.GameObjects.Text;
+  private playButton: ButtonComponent;
+  private foldButton: ButtonComponent;
+  private callButton: ButtonComponent;
+  private riseButton: ButtonComponent;
+  private checkButton: ButtonComponent;
+  private watchButton: ButtonComponent;
+  private playAgainButton: ButtonComponent;
 
   init(data: IRoom): void {
     this.mainCenterX = this.cameras.main.width / 2;
@@ -40,24 +47,67 @@ export class GameScene extends Scene {
     this.handleGetRoom();
     this.createBg();
     this.createCloseButton();
+    this.createPlayButton();
     this.createChips();
     this.createUsersCards();
     this.createTableCards();
-    this.createPlayButton();
   }
 
   private createUsersCards(): void {
     this.players = Array.from({ length: 6 }, (_, index) => ({
-      id: index.toString(),
+      id: (index + 1).toString(),
       name: `User${index}`,
     }));
     this.players.forEach((player, index) => {
       const hand = new Hand(this);
+      player.hand = hand;
       hand.setContainerPosition(index);
       hand.changeUserNamePlayer(player.name);
       hand.createFlipEvents();
-      hand.hideWinPlayer();
+      hand.hideCards();
     });
+    this.click();
+  }
+
+  private click(): void {
+    const player = this.findPlayerById('6');
+    this.input.on(Phaser.Input.Events.POINTER_DOWN, () => {
+      player?.hand?.hideWinPlayer();
+      this.foldButton.hide();
+      this.callButton.hide();
+      this.riseButton.hide();
+      this.watchButton.show();
+      this.showAllCards();
+    });
+  }
+
+  private showAllCards(): void {
+    this.players.forEach((player, index) => {
+      this.time.delayedCall(
+        index * 200,
+        () => {
+          player?.hand?.fadeInCard(player.hand.firstCard);
+          if (index === this.players.length - 1) {
+            this.players.forEach((player, index) => {
+              this.time.delayedCall(
+                index * 200,
+                () => {
+                  player?.hand?.fadeInCard(player.hand.secondCard);
+                },
+                [],
+                this
+              );
+            });
+          }
+        },
+        [],
+        this
+      );
+    });
+  }
+
+  private findPlayerById(playerId: string): IPlayer | undefined {
+    return this.players.find((player) => player.id === playerId);
   }
 
   private createTableCards(): void {
@@ -139,18 +189,71 @@ export class GameScene extends Scene {
   }
 
   private createPlayButton(): void {
-    const playButton = new ButtonComponent(this);
-    playButton.createButton(this.mainCenterX - 100, this.mainCenterY * 2 - 100, 'Play', 'green');
-    playButton.hide();
+    this.playButton = new ButtonComponent(this);
+    this.playButton.createButton(
+      this.mainCenterX - 100,
+      this.mainCenterY * 2 - 100,
+      'Play',
+      'green'
+    );
+    this.playButton.hide();
     this.createGameButtons();
   }
 
   private createGameButtons(): void {
-    const foldButton = new ButtonComponent(this);
-    foldButton.createButton(this.mainCenterX - 350, this.mainCenterY * 2 - 100, 'Fold', 'purple');
-    const callButton = new ButtonComponent(this);
-    callButton.createButton(this.mainCenterX - 70, this.mainCenterY * 2 - 100, 'Call');
-    const riseButton = new ButtonComponent(this);
-    riseButton.createButton(this.mainCenterX + 200, this.mainCenterY * 2 - 100, 'Rise', 'red');
+    this.createFoldButton();
+    this.createCallButton();
+    this.createCheckButton();
+    this.createWatchButton();
+    this.createPlayAgainButton();
+    this.createRiseButton();
+  }
+
+  private createFoldButton(): void {
+    this.foldButton = new ButtonComponent(this);
+    this.foldButton.createButton(
+      this.mainCenterX - 350,
+      this.mainCenterY * 2 - 100,
+      'Fold',
+      'purple'
+    );
+  }
+
+  private createCallButton(): void {
+    this.callButton = new ButtonComponent(this);
+    this.callButton.createButton(this.mainCenterX - 70, this.mainCenterY * 2 - 100, 'Call');
+  }
+
+  private createCheckButton(): void {
+    this.checkButton = new ButtonComponent(this);
+    this.checkButton.createButton(
+      this.mainCenterX - 70,
+      this.mainCenterY * 2 - 100,
+      'Check',
+      'green'
+    );
+    this.checkButton.hide();
+  }
+
+  private createWatchButton(): void {
+    this.watchButton = new ButtonComponent(this);
+    this.watchButton.createButton(this.mainCenterX - 70, this.mainCenterY * 2 - 100, 'Watch');
+    this.watchButton.hide();
+  }
+
+  private createPlayAgainButton(): void {
+    this.playAgainButton = new ButtonComponent(this);
+    this.playAgainButton.createButton(
+      this.mainCenterX - 70,
+      this.mainCenterY * 2 - 100,
+      'Play Again',
+      'green'
+    );
+    this.playAgainButton.hide();
+  }
+
+  private createRiseButton(): void {
+    this.riseButton = new ButtonComponent(this);
+    this.riseButton.createButton(this.mainCenterX + 200, this.mainCenterY * 2 - 100, 'Rise', 'red');
   }
 }

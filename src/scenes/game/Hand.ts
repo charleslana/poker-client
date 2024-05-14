@@ -7,6 +7,9 @@ export class Hand extends Phaser.GameObjects.Container {
     this.create();
   }
 
+  public firstCard: Phaser.GameObjects.Image;
+  public secondCard: Phaser.GameObjects.Image;
+
   private mainCenterX: number;
   private mainCenterY: number;
   private container: Phaser.GameObjects.Container;
@@ -26,11 +29,14 @@ export class Hand extends Phaser.GameObjects.Container {
   private infoPlayerText: Phaser.GameObjects.Text;
   private infoPlayerChipsText: Phaser.GameObjects.Text;
   private handText: Phaser.GameObjects.Text;
-  private firstCard: Phaser.GameObjects.Image;
-  private secondCard: Phaser.GameObjects.Image;
 
   public hideContainer(): void {
     this.container.setVisible(false);
+  }
+
+  public hideCards(): void {
+    this.firstCard.setVisible(false);
+    this.secondCard.setVisible(false);
   }
 
   public setContainerPosition(index: number): void {
@@ -141,6 +147,21 @@ export class Hand extends Phaser.GameObjects.Container {
     this.winPlayerRectangle.setVisible(false);
   }
 
+  public fadeInCard(card: Phaser.GameObjects.Image): void {
+    const fadeInDuration = 500;
+    card.setVisible(true);
+    card.setAlpha(0);
+    this.scene.tweens.add({
+      targets: card,
+      alpha: 1,
+      duration: fadeInDuration,
+      ease: 'Linear',
+      onComplete: () => {
+        console.log('Carta tornada visível');
+      },
+    });
+  }
+
   private fadeOutCard(chips: Phaser.GameObjects.Image, text: Phaser.GameObjects.Text): void {
     const fadeDuration = 300;
     this.scene.tweens.add({
@@ -191,9 +212,9 @@ export class Hand extends Phaser.GameObjects.Container {
       .image(
         this.defaultRectangle.displayOriginX - this.defaultRectangle.displayWidth - 25,
         this.defaultRectangle.displayOriginY - this.defaultRectangle.displayHeight + 20,
-        ImageKeyEnum.CardBack1
+        ImageKeyEnum.CardBack
       )
-      .setScale(0.5)
+      .setScale(0.34)
       .setOrigin(0)
       .setRotation(-0.3);
     this.container.add(this.firstCard);
@@ -204,9 +225,9 @@ export class Hand extends Phaser.GameObjects.Container {
       .image(
         this.defaultRectangle.displayOriginX - this.defaultRectangle.displayWidth + 25,
         this.defaultRectangle.displayOriginY - this.defaultRectangle.displayHeight + 20,
-        ImageKeyEnum.CardBack1
+        ImageKeyEnum.CardBack
       )
-      .setScale(0.5)
+      .setScale(0.34)
       .setOrigin(-0.25, 0.25)
       .setRotation(0.3);
     this.container.add(this.secondCard);
@@ -614,20 +635,20 @@ export class Hand extends Phaser.GameObjects.Container {
       scaleX: 0,
       duration: halfFlipDuration,
       onComplete: () => {
-        if (card.texture.key === ImageKeyEnum.CardBack1) {
+        if (card.texture.key === ImageKeyEnum.CardBack) {
           card.setTexture(ImageKeyEnum.Card2OfClubs);
         } else {
-          card.setTexture(ImageKeyEnum.CardBack1);
+          card.setTexture(ImageKeyEnum.CardBack);
         }
       },
       onCompleteScope: this,
       onStart: () => {
-        card.setScale(0.5);
+        card.setScale(0.34);
       },
     });
     this.scene.tweens.add({
       targets: card,
-      scaleX: 0.5,
+      scaleX: 0.34,
       duration: halfFlipDuration,
       delay: halfFlipDuration,
     });
