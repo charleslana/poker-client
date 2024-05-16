@@ -45,7 +45,7 @@ export class Hand extends Phaser.GameObjects.Container {
   }
 
   public setContainerPosition(index: number): void {
-    const { x, y } = this.createUserTable(index + 1);
+    const { x, y } = this.getUserTable(index + 1);
     this.container.setPosition(x, y);
   }
 
@@ -90,7 +90,7 @@ export class Hand extends Phaser.GameObjects.Container {
     this.secondCard.setTexture(image);
   }
 
-  public createUserTable(index: number): {
+  public getUserTable(index: number): {
     x: number;
     y: number;
   } {

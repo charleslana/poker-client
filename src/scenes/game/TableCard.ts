@@ -38,31 +38,46 @@ export class TableCard extends Phaser.GameObjects.Container {
     });
   }
 
-  public moveCardToCenter(x: number, y: number): void {
+  public moveCardToCenter(x: number, y: number, lastAnimateCard?: TableCard): void {
     const card = this.scene.add.image(x, y, ImageKeyEnum.CardBack).setScale(0.34).setOrigin(0);
     card.setPosition(x, y);
     const moveDuration = 500;
-    const tableCenterX = this.mainCenterX;
-    const tableCenterY = this.mainCenterY - 50;
+    const tableCenterX = lastAnimateCard?.image.x;
+    const tableCenterY = lastAnimateCard?.image.y;
     this.scene.tweens.add({
       targets: card,
       x: tableCenterX,
       y: tableCenterY,
       duration: moveDuration,
       onComplete: () => {
-        this.fadeOutCard(card);
+        this.fadeOutCard(card, lastAnimateCard);
       },
     });
   }
 
-  private fadeOutCard(card: Phaser.GameObjects.Image): void {
+  public fadeInCard(): void {
+    const fadeInDuration = 500;
+    this.image.setVisible(true);
+    this.image.setAlpha(0);
+    this.scene.tweens.add({
+      targets: this.image,
+      alpha: 1,
+      duration: fadeInDuration,
+      ease: 'Linear',
+      onComplete: () => {
+        this.flip();
+      },
+    });
+  }
+
+  private fadeOutCard(card: Phaser.GameObjects.Image, lastAnimateCard?: TableCard): void {
     const fadeDuration = 300;
     this.scene.tweens.add({
       targets: card,
       alpha: 0,
       duration: fadeDuration,
       onComplete: () => {
-        // this.fadeInCard(card);
+        lastAnimateCard?.fadeInCard();
       },
     });
   }
@@ -84,6 +99,7 @@ export class TableCard extends Phaser.GameObjects.Container {
     this.mainCenterX = this.scene.cameras.main.width / 2;
     this.mainCenterY = this.scene.cameras.main.height / 2;
     this.image = this.scene.add.image(0, 0, ImageKeyEnum.CardBack).setScale(0.34).setOrigin(0);
+    this.image.setVisible(false);
   }
 
   private flip(): void {

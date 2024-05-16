@@ -68,6 +68,9 @@ export class GameScene extends Scene {
       hand.hideButtons();
     });
     this.click();
+    this.input.keyboard!.on('keydown-R', () => {
+      this.scene.restart();
+    });
   }
 
   private click(): void {
@@ -85,6 +88,16 @@ export class GameScene extends Scene {
       player2?.hand?.changeBlind('big');
       player2?.hand?.animateButton(player2.hand.blindContainer);
       player3?.hand?.animateButton(player3.hand.blindContainer);
+      const { x, y } = player3!.hand!.getUserTable(4);
+      const tableCard = new TableCard(this);
+      this.tableCards.push({
+        id: this.tableCards.length + 1,
+        name: `Card${this.tableCards.length}`,
+        tableCard,
+      });
+      const lastTableCard = this.tableCards[this.tableCards.length - 1];
+      lastTableCard.tableCard?.setTableCard(this.tableCards.length - 1);
+      tableCard.moveCardToCenter(x, y, lastTableCard.tableCard);
     });
   }
 
@@ -118,19 +131,20 @@ export class GameScene extends Scene {
   }
 
   private createTableCards(): void {
-    this.tableCards = Array.from({ length: 5 }, (_, index) => ({
+    this.tableCards = Array.from({ length: 3 }, (_, index) => ({
       id: index,
       name: `Card${index}`,
     }));
     this.tableCards.forEach((_card, index) => {
       const tableCard = new TableCard(this);
       tableCard.setTableCard(index);
-      tableCard.createFlipEvent();
+      tableCard.fadeInCard();
+      // tableCard.createFlipEvent();
       const hand = new Hand(this);
       hand.hideContainer();
-      const { x, y } = hand.createUserTable(6);
+      const { x, y } = hand.getUserTable(6);
       hand.moveChipsToCenter(x, y, this.chips);
-      tableCard.moveCardToCenter(x, y);
+      // tableCard.moveCardToCenter(x, y);
     });
   }
 
