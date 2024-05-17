@@ -199,7 +199,7 @@ export class GameScene extends Scene {
 
   private backToLobby(): void {
     const user = UserSingleton.getInstance();
-    this.socket.emit('leaveRoom', this.room.id, user.name);
+    this.socket.emit('leaveRoom', this.room.id, user.name, user.id);
     this.socket.on('leaveRoomSuccess', () => {
       this.socket.off('getRoom');
       this.socket.off('leaveRoomSuccess');
