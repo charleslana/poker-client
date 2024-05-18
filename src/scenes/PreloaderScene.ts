@@ -35,7 +35,7 @@ export class PreloaderScene extends Scene {
   }
 
   create(): void {
-    this.scene.start(SceneKeyEnum.HomeScene);
+    this.scene.start(SceneKeyEnum.GameScene);
   }
 
   private createBg(): void {

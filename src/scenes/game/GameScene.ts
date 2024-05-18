@@ -1,4 +1,5 @@
 import { ButtonComponent } from '@/components/ButtonComponent';
+import { ConfirmDialog } from './ConfirmDialog';
 import { Hand } from './Hand';
 import { ICard } from '@/interface/ICard';
 import { IGetUser } from '@/interface/IUser';
@@ -193,7 +194,8 @@ export class GameScene extends Scene {
       .setOrigin(1, 0);
     closeButton.setInteractive({ cursor: 'pointer' });
     closeButton.on(Phaser.Input.Events.POINTER_DOWN, () => {
-      this.backToLobby();
+      const confirmDialog = new ConfirmDialog(this);
+      confirmDialog.on(confirmDialog.event, this.backToLobby, this);
     });
   }
 
