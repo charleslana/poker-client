@@ -108,11 +108,27 @@ export class Chat extends Phaser.GameObjects.Container {
     this.scene.add
       .rectangle(10, this.scene.cameras.main.height - 270, 300, 250, 0xffffff, 0)
       .setOrigin(0);
-    this.scene.add.text(10, this.scene.cameras.main.height - 270, 'Chats', {
+    const chatText = this.scene.add.text(10, this.scene.cameras.main.height - 270, 'Chats', {
       fontFamily: 'ArianHeavy',
       fontSize: '22px',
       color: '#ffffff',
     });
+    const toggleChatIcon = this.scene.add
+      .image(
+        chatText.displayWidth + 20,
+        this.scene.cameras.main.height - 270,
+        ImageKeyEnum.HideIcon
+      )
+      .setScale(0.05)
+      .setOrigin(0);
+    toggleChatIcon
+      .setInteractive({ cursor: 'pointer' })
+      .on(Phaser.Input.Events.POINTER_DOWN, () => {
+        const isVisible = !this.messageListDiv.visible;
+        this.messageListDiv.setVisible(isVisible);
+        this.messageInput.setVisible(isVisible);
+        toggleChatIcon.setTexture(isVisible ? ImageKeyEnum.HideIcon : ImageKeyEnum.ShowIcon);
+      });
     this.messageListDiv = this.scene.add
       .dom(
         10,
