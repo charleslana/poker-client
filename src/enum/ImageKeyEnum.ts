@@ -64,4 +64,6 @@ export enum ImageKeyEnum {
   CardKingOfSpades = 'CardKingOfSpades',
   CardAceOfSpades = 'CardAceOfSpades',
   CardBack = 'CardBack',
+  HideIcon = 'HideIcon',
+  ShowIcon = 'ShowIcon',
 }

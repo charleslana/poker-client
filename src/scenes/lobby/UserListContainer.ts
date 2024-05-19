@@ -93,23 +93,23 @@ export class UserListContainer extends Phaser.GameObjects.Container {
     userContainer.style.marginBottom = '5px';
     userContainer.style.backgroundColor = '#70706e';
     userContainer.style.borderRadius = '5px';
-    const jElement = this.createJElement();
+    const pElement = this.createPElement();
     const nameElement = this.createNameElement(user);
-    userContainer.appendChild(jElement);
+    userContainer.appendChild(pElement);
     userContainer.appendChild(nameElement);
     return userContainer;
   }
 
-  private createJElement(): HTMLDivElement {
-    const jElement = document.createElement('div');
-    jElement.textContent = 'J';
-    jElement.style.padding = '10px';
-    jElement.style.backgroundColor = '#b23a1f';
-    jElement.style.color = 'black';
-    jElement.style.fontFamily = 'Bebas';
-    jElement.style.borderRadius = '5px';
-    jElement.style.fontSize = '20px';
-    return jElement;
+  private createPElement(): HTMLDivElement {
+    const pElement = document.createElement('div');
+    pElement.textContent = 'J';
+    pElement.style.padding = '10px';
+    pElement.style.backgroundColor = '#b23a1f';
+    pElement.style.color = 'black';
+    pElement.style.fontFamily = 'Bebas';
+    pElement.style.borderRadius = '5px';
+    pElement.style.fontSize = '20px';
+    return pElement;
   }
 
   private createNameElement(userName: string): HTMLDivElement {

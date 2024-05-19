@@ -1,4 +1,5 @@
 import { ButtonComponent } from '@/components/ButtonComponent';
+import { Chat } from './Chat';
 import { ConfirmDialog } from './ConfirmDialog';
 import { Hand } from './Hand';
 import { ICard } from '@/interface/ICard';
@@ -52,6 +53,7 @@ export class GameScene extends Scene {
     this.createChips();
     this.createUsersCards();
     this.createTableCards();
+    new Chat(this);
   }
 
   private createUsersCards(): void {
@@ -68,13 +70,13 @@ export class GameScene extends Scene {
       hand.hideCards();
       hand.hideButtons();
     });
-    this.click();
+    // this.click();
     this.input.keyboard!.on('keydown-R', () => {
       this.scene.restart();
     });
   }
 
-  private click(): void {
+  public click(): void {
     const player = this.findPlayerById('6');
     const player2 = this.findPlayerById('2');
     const player3 = this.findPlayerById('4');
