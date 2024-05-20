@@ -30,6 +30,10 @@ export class Hand extends Phaser.GameObjects.Container {
   private infoPlayerChipsText: Phaser.GameObjects.Text;
   private handText: Phaser.GameObjects.Text;
 
+  public deleteContainer(): void {
+    this.container.destroy();
+  }
+
   public hideContainer(): void {
     this.container.setVisible(false);
   }

@@ -61,14 +61,21 @@ export class GameScene extends Scene {
     this.chat.updateRoom(this.room);
   }
 
+  private clearPreviousHands(): void {
+    this.players.forEach((player) => {
+      if (player.hand) {
+        player.hand.deleteContainer();
+        player.hand = undefined;
+      }
+    });
+  }
+
   private createUsersCards(): void {
     // this.players = Array.from({ length: 6 }, (_, index) => ({
     //   id: (index + 1).toString(),
     //   name: `User${index}`,
     // }));
-
-    // TO DO falta remover o hand da mesa
-
+    this.clearPreviousHands();
     this.players = this.room.users.filter((user) => !user.watch);
     this.players.forEach((player, index) => {
       const hand = new Hand(this);
@@ -79,10 +86,22 @@ export class GameScene extends Scene {
       hand.hideCards();
       hand.hideButtons();
     });
+    this.validatePlayButton();
     // this.click();
     this.input.keyboard!.on('keydown-R', () => {
       this.scene.restart();
     });
+  }
+
+  private validatePlayButton(): void {
+    if (this.isOwner()) {
+      const count = this.room.users.filter((user) => !user.watch).length;
+      if (count >= 2) {
+        this.playButton.show();
+        return;
+      }
+      this.playButton.hide();
+    }
   }
 
   public click(): void {
@@ -246,6 +265,7 @@ export class GameScene extends Scene {
     playButton.on(Phaser.Input.Events.POINTER_DOWN, () => {
       console.log('click play');
     });
+    this.playButton.hide();
     if (!this.isOwner()) {
       this.playButton.hide();
       const user = this.getUserRoom();
