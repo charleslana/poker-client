@@ -5,4 +5,5 @@ export interface IPlayer {
   name: string;
   hand?: Hand;
   watch?: boolean;
+  originalId?: number;
 }

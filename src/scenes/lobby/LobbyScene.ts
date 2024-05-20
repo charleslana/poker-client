@@ -83,7 +83,7 @@ export class LobbyScene extends Scene {
         color: '#ffffff',
       })
       .setOrigin(0.5, 0);
-    text.setX(centerX - text.width / 2);
+    text.setX(centerX - text.width / 2).setOrigin(0);
   }
 
   private createCloseButton(): void {

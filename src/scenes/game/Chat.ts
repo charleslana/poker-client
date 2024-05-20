@@ -10,11 +10,18 @@ export class Chat extends Phaser.GameObjects.Container {
     this.create();
   }
 
-  private room: IRoom;
+  private room: IRoom = <IRoom>{};
   private userListDiv: Phaser.GameObjects.DOMElement;
   private messageList: IChat[] = [];
   private messageListDiv: Phaser.GameObjects.DOMElement;
   private messageInput: Phaser.GameObjects.DOMElement;
+  private spectatorsText: Phaser.GameObjects.Text;
+
+  public updateRoom(room: IRoom): void {
+    this.room = room;
+    this.updateUserListDisplay();
+    this.spectatorsText.setText(`Spectators\n${this.room.name}`);
+  }
 
   private create(): void {
     this.createSpectators();
@@ -23,13 +30,13 @@ export class Chat extends Phaser.GameObjects.Container {
 
   private createSpectators(): void {
     this.scene.add.rectangle(10, 10, 250, 250, 0xffffff, 0).setOrigin(0);
-    const spectatorsText = this.scene.add.text(10, 10, 'Spectators', {
+    this.spectatorsText = this.scene.add.text(10, 10, `Spectators`, {
       fontFamily: 'ArianHeavy',
       fontSize: '22px',
       color: '#ffffff',
     });
     const toggleSpectatorsIcon = this.scene.add
-      .image(spectatorsText.displayWidth + 20, 10, ImageKeyEnum.HideIcon)
+      .image(this.spectatorsText.displayWidth + 20, 10, ImageKeyEnum.HideIcon)
       .setScale(0.05)
       .setOrigin(0);
     toggleSpectatorsIcon
@@ -42,7 +49,7 @@ export class Chat extends Phaser.GameObjects.Container {
     this.userListDiv = this.scene.add
       .dom(
         10,
-        40,
+        50,
         'div',
         `
         width: 230px;
@@ -63,21 +70,23 @@ export class Chat extends Phaser.GameObjects.Container {
 
   private updateUserListDisplay(): void {
     this.clearUserList();
-    this.room = {
-      id: '1',
-      name: 'room',
-      users: Array.from({ length: 10 }, (_, index) => ({
-        id: (index + 1).toString(),
-        name: `User${index}`,
-        watch: true,
-      })),
-    };
-    this.room.users.forEach((user) => {
-      if (user.watch) {
-        const userContainer = this.createUserContainer(user.name);
-        this.userListDiv.node.appendChild(userContainer);
-      }
-    });
+    // this.room = {
+    //   id: '1',
+    //   name: 'room',
+    //   users: Array.from({ length: 10 }, (_, index) => ({
+    //     id: (index + 1).toString(),
+    //     name: `User${index}`,
+    //     watch: true,
+    //   })),
+    // };
+    if (this.room.users) {
+      this.room.users.forEach((user) => {
+        if (user.watch) {
+          const userContainer = this.createUserContainer(user.name);
+          this.userListDiv.node.appendChild(userContainer);
+        }
+      });
+    }
   }
 
   private clearUserList(): void {

@@ -1,3 +1,4 @@
+import * as Phaser from 'phaser';
 import { ButtonComponent } from '@/components/ButtonComponent';
 import { Chat } from './Chat';
 import { ConfirmDialog } from './ConfirmDialog';
@@ -24,8 +25,8 @@ export class GameScene extends Scene {
   private user: IGetUser;
   private mainCenterX: number;
   private mainCenterY: number;
-  private players: IPlayer[];
-  private tableCards: ICard[];
+  private players: IPlayer[] = [];
+  private tableCards: ICard[] = [];
   private chips: Phaser.GameObjects.Text;
   private playButton: ButtonComponent;
   private foldButton: ButtonComponent;
@@ -34,6 +35,8 @@ export class GameScene extends Scene {
   private checkButton: ButtonComponent;
   private watchButton: ButtonComponent;
   private playAgainButton: ButtonComponent;
+  private joinButton: ButtonComponent;
+  private chat: Chat;
 
   init(data: IRoom): void {
     this.mainCenterX = this.cameras.main.width / 2;
@@ -41,6 +44,7 @@ export class GameScene extends Scene {
     this.room = data;
     this.user = UserSingleton.getInstance();
     console.log(this.room);
+    console.log(this.user);
   }
 
   create(): void {
@@ -52,15 +56,20 @@ export class GameScene extends Scene {
     this.createPlayButton();
     this.createChips();
     this.createUsersCards();
-    this.createTableCards();
-    new Chat(this);
+    // this.createTableCards();
+    this.chat = new Chat(this);
+    this.chat.updateRoom(this.room);
   }
 
   private createUsersCards(): void {
-    this.players = Array.from({ length: 6 }, (_, index) => ({
-      id: (index + 1).toString(),
-      name: `User${index}`,
-    }));
+    // this.players = Array.from({ length: 6 }, (_, index) => ({
+    //   id: (index + 1).toString(),
+    //   name: `User${index}`,
+    // }));
+
+    // TO DO falta remover o hand da mesa
+
+    this.players = this.room.users.filter((user) => !user.watch);
     this.players.forEach((player, index) => {
       const hand = new Hand(this);
       player.hand = hand;
@@ -86,6 +95,7 @@ export class GameScene extends Scene {
       this.callButton.hide();
       this.riseButton.hide();
       this.watchButton.show();
+      this.joinButton.hide();
       this.showAllCards();
       player?.hand?.animateButton(player.hand.dealerContainer);
       player2?.hand?.changeBlind('big');
@@ -133,7 +143,7 @@ export class GameScene extends Scene {
     return this.players.find((player) => player.id === playerId);
   }
 
-  private createTableCards(): void {
+  public createTableCards(): void {
     this.tableCards = Array.from({ length: 3 }, (_, index) => ({
       id: index,
       name: `Card${index}`,
@@ -158,7 +168,7 @@ export class GameScene extends Scene {
       .setOrigin(0);
     const chipsCenterX = chips.x + chips.displayWidth / 2;
     this.chips = this.add
-      .text(chipsCenterX, chips.y + chips.displayHeight + 10, '10', {
+      .text(chipsCenterX, chips.y + chips.displayHeight + 10, '0', {
         fontFamily: 'ArianHeavy',
         fontSize: '22px',
         color: '#ffffff',
@@ -166,6 +176,8 @@ export class GameScene extends Scene {
         strokeThickness: 2,
       })
       .setOrigin(0.5);
+    chips.setVisible(false);
+    this.chips.setVisible(false);
   }
 
   private handleSocket(): void {
@@ -181,6 +193,8 @@ export class GameScene extends Scene {
   private handleGetRoom(): void {
     this.socket.on('getRoom', (room: IRoom) => {
       this.room = room;
+      this.chat.updateRoom(this.room);
+      this.createUsersCards();
       console.log('get room:', room);
     });
   }
@@ -213,25 +227,57 @@ export class GameScene extends Scene {
     });
   }
 
+  private getUserRoom(): IPlayer | undefined {
+    return this.room.users.find((user) => user.originalId === this.user.id);
+  }
+
+  private isOwner(): boolean {
+    return this.room.ownerId === this.user.id;
+  }
+
   private createPlayButton(): void {
     this.playButton = new ButtonComponent(this);
-    this.playButton.createButton(
+    const playButton = this.playButton.createButton(
       this.mainCenterX - 100,
       this.mainCenterY * 2 - 100,
       'Play',
       'green'
     );
-    this.playButton.hide();
-    this.createGameButtons();
+    playButton.on(Phaser.Input.Events.POINTER_DOWN, () => {
+      console.log('click play');
+    });
+    if (!this.isOwner()) {
+      this.playButton.hide();
+      const user = this.getUserRoom();
+      if (user?.watch) {
+        this.createJoinButton(user);
+        return;
+      }
+      this.createWatchButton();
+    }
+    // this.createGameButtons();
   }
 
-  private createGameButtons(): void {
+  public createGameButtons(): void {
     this.createFoldButton();
     this.createCallButton();
     this.createCheckButton();
     this.createWatchButton();
     this.createPlayAgainButton();
     this.createRiseButton();
+  }
+
+  private createJoinButton(user: IPlayer): void {
+    this.joinButton = new ButtonComponent(this);
+    const joinButton = this.joinButton.createButton(
+      this.mainCenterX - 70,
+      this.mainCenterY * 2 - 100,
+      'Join'
+    );
+    joinButton.on(Phaser.Input.Events.POINTER_DOWN, () => {
+      this.socket.emit('changeWatch', this.room.id, !user.watch);
+      this.joinButton.hide();
+    });
   }
 
   private createFoldButton(): void {
@@ -263,7 +309,6 @@ export class GameScene extends Scene {
   private createWatchButton(): void {
     this.watchButton = new ButtonComponent(this);
     this.watchButton.createButton(this.mainCenterX - 70, this.mainCenterY * 2 - 100, 'Watch');
-    this.watchButton.hide();
   }
 
   private createPlayAgainButton(): void {
