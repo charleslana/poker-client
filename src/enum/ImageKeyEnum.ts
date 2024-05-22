@@ -66,4 +66,5 @@ export enum ImageKeyEnum {
   CardBack = 'CardBack',
   HideIcon = 'HideIcon',
   ShowIcon = 'ShowIcon',
+  AllInButton = 'AllInButton',
 }

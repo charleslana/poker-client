@@ -33,6 +33,7 @@ export class PreloaderScene extends Scene {
     this.load.image(ImageKeyEnum.StarOwnerIcon, 'assets/images/owner.png');
     this.load.image(ImageKeyEnum.HideIcon, 'assets/images/hide.png');
     this.load.image(ImageKeyEnum.ShowIcon, 'assets/images/show.png');
+    this.load.image(ImageKeyEnum.AllInButton, 'assets/images/all_in.png');
     this.loadCards();
   }
 

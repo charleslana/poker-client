@@ -184,7 +184,8 @@ export class JoinDialog extends Phaser.GameObjects.Container {
     roomContainer.style.cursor = 'pointer';
     const roomName = this.createRoomName(room.name);
     const infoContainer = this.createInfoContainer();
-    const blinds = this.createBlinds(room.users.length);
+    const usersNotWatchingCount = Math.min(room.users.filter((user) => !user.watch).length, 2);
+    const blinds = this.createBlinds(usersNotWatchingCount);
     const players = this.createPlayers(room.users.length);
     roomContainer.appendChild(roomName);
     infoContainer.appendChild(blinds);
@@ -208,9 +209,9 @@ export class JoinDialog extends Phaser.GameObjects.Container {
     return infoContainer;
   }
 
-  private createBlinds(playersCount: number): HTMLDivElement {
+  private createBlinds(usersNotWatchingCount: number): HTMLDivElement {
     const blinds = document.createElement('div');
-    blinds.textContent = `Blinds: ${playersCount}/2`;
+    blinds.textContent = `Blinds: ${usersNotWatchingCount}/2`;
     blinds.style.color = '#1a905e';
     return blinds;
   }

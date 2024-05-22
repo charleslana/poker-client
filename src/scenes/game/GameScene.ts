@@ -75,6 +75,7 @@ export class GameScene extends Scene {
     //   id: (index + 1).toString(),
     //   name: `User${index}`,
     // }));
+    // this.room.users = [];
     this.clearPreviousHands();
     this.players = this.room.users.filter((user) => !user.watch);
     this.players.forEach((player, index) => {
@@ -91,6 +92,8 @@ export class GameScene extends Scene {
     this.input.keyboard!.on('keydown-R', () => {
       this.scene.restart();
     });
+    // this.players[0].hand?.applyContainerAlpha();
+    // this.players[1].hand?.allInButton.setVisible(true);
   }
 
   private validatePlayButton(): void {
@@ -267,13 +270,13 @@ export class GameScene extends Scene {
     });
     this.playButton.hide();
     if (!this.isOwner()) {
+      this.createWatchButton();
       this.playButton.hide();
       const user = this.getUserRoom();
       if (user?.watch) {
         this.createJoinButton(user);
         return;
       }
-      this.createWatchButton();
     }
     // this.createGameButtons();
   }
@@ -292,11 +295,13 @@ export class GameScene extends Scene {
     const joinButton = this.joinButton.createButton(
       this.mainCenterX - 70,
       this.mainCenterY * 2 - 100,
-      'Join'
+      'Join',
+      'green'
     );
     joinButton.on(Phaser.Input.Events.POINTER_DOWN, () => {
       this.socket.emit('changeWatch', this.room.id, !user.watch);
       this.joinButton.hide();
+      this.watchButton.show();
     });
   }
 
@@ -328,7 +333,17 @@ export class GameScene extends Scene {
 
   private createWatchButton(): void {
     this.watchButton = new ButtonComponent(this);
-    this.watchButton.createButton(this.mainCenterX - 70, this.mainCenterY * 2 - 100, 'Watch');
+    const watchButton = this.watchButton.createButton(
+      this.mainCenterX - 70,
+      this.mainCenterY * 2 - 100,
+      'Watch'
+    );
+    this.watchButton.setVisible(false);
+    watchButton.on(Phaser.Input.Events.POINTER_DOWN, () => {
+      this.socket.emit('changeWatch', this.room.id, true);
+      this.watchButton.hide();
+      this.joinButton.show();
+    });
   }
 
   private createPlayAgainButton(): void {

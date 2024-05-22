@@ -11,6 +11,7 @@ export class Hand extends Phaser.GameObjects.Container {
   public secondCard: Phaser.GameObjects.Image;
   public dealerContainer: Phaser.GameObjects.Container;
   public blindContainer: Phaser.GameObjects.Container;
+  public allInButton: Phaser.GameObjects.Image;
 
   private mainCenterX: number;
   private mainCenterY: number;
@@ -46,6 +47,15 @@ export class Hand extends Phaser.GameObjects.Container {
   public hideButtons(): void {
     this.dealerContainer.setVisible(false);
     this.blindContainer.setVisible(false);
+    this.allInButton.setVisible(false);
+  }
+
+  public applyContainerAlpha(): void {
+    this.container.setAlpha(0.4);
+  }
+
+  public removeContainerAlpha(): void {
+    this.container.setAlpha(1);
   }
 
   public setContainerPosition(index: number): void {
@@ -552,6 +562,7 @@ export class Hand extends Phaser.GameObjects.Container {
     this.container.add(this.playerChipsRectangle);
     this.createPlayerChipsText();
     this.createChips();
+    this.createAllInButton();
   }
 
   private createPlayerChipsText(): void {
@@ -585,6 +596,24 @@ export class Hand extends Phaser.GameObjects.Container {
       .setOrigin(0);
     this.container.add(chipsImageRectangle);
     this.createChipsImage();
+  }
+
+  private createAllInButton(): void {
+    this.allInButton = this.scene.add
+      .image(
+        this.defaultRectangle.displayOriginX -
+          this.defaultRectangle.displayWidth +
+          this.infoPlayerRectangle.displayWidth +
+          14,
+        this.defaultRectangle.displayOriginY -
+          this.defaultRectangle.displayHeight +
+          this.cardsRectangle.displayHeight +
+          15,
+        ImageKeyEnum.AllInButton
+      )
+      .setScale(0.08)
+      .setOrigin(0);
+    this.container.add(this.allInButton);
   }
 
   private createChipsImage(): void {
