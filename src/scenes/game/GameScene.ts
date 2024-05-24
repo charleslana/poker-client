@@ -98,6 +98,10 @@ export class GameScene extends Scene {
 
   private validatePlayButton(): void {
     if (this.isOwner()) {
+      if (this.joinButton || this.watchButton) {
+        this.joinButton.hide();
+        this.watchButton.hide();
+      }
       const count = this.room.users.filter((user) => !user.watch).length;
       if (count >= 2) {
         this.playButton.show();
@@ -299,7 +303,7 @@ export class GameScene extends Scene {
       'green'
     );
     joinButton.on(Phaser.Input.Events.POINTER_DOWN, () => {
-      this.socket.emit('changeWatch', this.room.id, !user.watch);
+      this.socket.emit('changeWatch', this.room.id, !user.watch, user.originalId);
       this.joinButton.hide();
       this.watchButton.show();
     });
@@ -340,7 +344,7 @@ export class GameScene extends Scene {
     );
     this.watchButton.setVisible(false);
     watchButton.on(Phaser.Input.Events.POINTER_DOWN, () => {
-      this.socket.emit('changeWatch', this.room.id, true);
+      this.socket.emit('changeWatch', this.room.id, true, this.user.id);
       this.watchButton.hide();
       this.joinButton.show();
     });
